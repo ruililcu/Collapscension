@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Collapscension</title>
+</head>
+<body>
+    <h1>Collapscension</h1>
+    <script src="break_eternity.js"></script>
+    <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()">+1 Point!</button>
+    <br><h2 id="1"style="display:none;"></h2>
+    <br><button id="2"style="
+    background-color:#000;color:#fff;display:none;
+    "onclick="addAtom_h()"></button>
+    <p id="3"></p>
+    <script>
+        const pt1=document.getElementById(1);
+        const pt2=document.getElementById(2);
+        const pt3=document.getElementById(3);
+        const inSec=1/60;
+        let Point=new Decimal("0");
+        let Ptspeed=new Decimal("0");
+        let H=new Decimal("0");
+        let priceH=new Decimal("4");
+        const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
+        function gameStart()
+        { 
+            Point=Point.plus(1);
+            pt1.style.display="inline";
+            update();
+        }
+        function update()
+        {
+            pt1.textContent=`You have ${Format(Point)} Points`;
+            if(Decimal.cmp(Point,new Decimal(3))>=0)
+            {
+                pt1.textContent+=`(${Format(Ptspeed)}/s)`;
+                pt2.style.display="inline";
+                pt2.textContent=`Buy a single Hydrogen|Cost:${Format(priceH)} Points`
+                pt3.textContent=`You have ${Format(H)} Hydrogens,every atom+20%price,every Hydrogens+0.1 speed!`;
+            }
+        }
+        function addAtom_h()
+        {
+            if(Decimal.cmp(Point,priceH)>=0)
+            {
+                Point=Point.minus(priceH);
+                H=H.plus(1);
+                Ptspeed=Ptspeed.plus(0.1);
+                priceH=priceH.mul(1.2);
+                update();
+            }
+        }
+        function Format(p)
+        {
+            if(Decimal.cmp(p,new Decimal(1e9))==-1)return p.toFixed(2);
+            else return p.toExponential(2).replace(/\+/g,'');
+        }
+        async function mainLoop()
+        {
+            while(1)
+            {
+                await delay(inSec*1000);
+                Point=Point.plus(Ptspeed.mul(inSec));
+                update();
+            }
+        }
+        mainLoop();
+    </script>
+</body>
+</html>
