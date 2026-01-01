@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Collapscension</title>
+    <style>
+        body
+        {
+            background-color:black;
+            color:aquamarine;
+        }
+    </style>
 </head>
 <body>
     <h1>Collapscension</h1>
@@ -13,6 +20,9 @@
     <br><button id="2"style="
     background-color:#354;color:#fff;display:none;
     "onclick="addAtom_h()"></button>
+    <br><button id="6"style="
+    background-color:#354;color:#fff;display:none;
+    "onclick="addAtom_2()"></button>
     <p id="3"></p>
     <button style="background-color:#345;color:#fff;"onclick="buyH_2()"id="5">
         Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
@@ -22,12 +32,15 @@
         const pt3=document.getElementById(3);
         const pt4=document.getElementById(4);
         const pt5=document.getElementById(5);
+        const pt6=document.getElementById(6);
         const inSec=1/60;
         let Point=new Decimal("0");
         let Ptspeed=new Decimal("0");
         let pointMult=new Decimal("1");
         let H=new Decimal("0");
+        let CorNorO=new Decimal("0");
         let priceH=new Decimal("4");
+        let price2=new Decimal("150");
         let Upgrades=
         {
             H_2:0
@@ -42,7 +55,7 @@
         function update()
         {
             pt1.textContent=`You have ${Format(Point)} Points`;
-            Ptspeed=H.mul(0.1);
+            Ptspeed=H.mul(0.1).plus(CorNorO.mul(1.5));
             Ptspeed=Ptspeed.mul(pointMult);
             if(Decimal.cmp(Point,new Decimal(3))>=0)
             {
@@ -50,12 +63,15 @@
                 pt2.style.display="inline";
                 pt2.textContent=`Buy a single Hydrogen|Cost:${Format(priceH)} Points`
                 pt3.textContent=`You have ${Format(H)} Hydrogens,
-                every atom+20%price,every Hydrogens+${Format(pointMult.mul(0.1))} speed!`;
+                every atom +20% price,every Hydrogens+ ${Format(pointMult.mul(0.1))} speed!`;
                 pt4.textContent=`+${Format(pointMult)} point`
+                pt6.textContent=`You have ${Format(CorNorO)} Carbon or Nitrogen or Oxygon,
+                every this+ ${Format(pointMult.mul(1.5))} speed!(Cost:${Format(price2)})`
             }
             if(Decimal.cmp(H,new Decimal(2))>=0&&Upgrades.H_2==0)
             {
                 pt5.style.display="inline";
+                pt6.style.display="inline";
             }else pt5.style.display="none";
         }
         function addAtom_h()
@@ -90,6 +106,16 @@
                 pointMult=pointMult.mul(2);
                 update();
                 Upgrades.H_2=1;
+            }
+        }
+        function addAtom_2()
+        {
+            if(Decimal.cmp(Point,price2)>=0)
+            {
+                Point=Point.minus(price2);
+                CorNorO=CorNorO.plus(1);
+                price2=price2.mul(1.2);
+                update();
             }
         }
         mainLoop();
