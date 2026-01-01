@@ -8,38 +8,55 @@
 <body>
     <h1>Collapscension</h1>
     <script src="break_eternity.js"></script>
-    <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()">+1 Point!</button>
+    <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()"id="4">+1 point</button>
     <br><h2 id="1"style="display:none;"></h2>
     <br><button id="2"style="
-    background-color:#000;color:#fff;display:none;
+    background-color:#354;color:#fff;display:none;
     "onclick="addAtom_h()"></button>
     <p id="3"></p>
+    <button style="background-color:#345;color:#fff;"onclick="buyH_2()"id="5">
+        Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
     <script>
         const pt1=document.getElementById(1);
         const pt2=document.getElementById(2);
         const pt3=document.getElementById(3);
+        const pt4=document.getElementById(4);
+        const pt5=document.getElementById(5);
         const inSec=1/60;
         let Point=new Decimal("0");
         let Ptspeed=new Decimal("0");
+        let pointMult=new Decimal("1");
         let H=new Decimal("0");
         let priceH=new Decimal("4");
+        let Upgrades=
+        {
+            H_2:0
+        }
         const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
         function gameStart()
         { 
-            Point=Point.plus(1);
+            Point=Point.plus(pointMult);
             pt1.style.display="inline";
             update();
         }
         function update()
         {
             pt1.textContent=`You have ${Format(Point)} Points`;
+            Ptspeed=H.mul(0.1);
+            Ptspeed=Ptspeed.mul(pointMult);
             if(Decimal.cmp(Point,new Decimal(3))>=0)
             {
                 pt1.textContent+=`(${Format(Ptspeed)}/s)`;
                 pt2.style.display="inline";
                 pt2.textContent=`Buy a single Hydrogen|Cost:${Format(priceH)} Points`
-                pt3.textContent=`You have ${Format(H)} Hydrogens,every atom+20%price,every Hydrogens+0.1 speed!`;
+                pt3.textContent=`You have ${Format(H)} Hydrogens,
+                every atom+20%price,every Hydrogens+${Format(pointMult.mul(0.1))} speed!`;
+                pt4.textContent=`+${Format(pointMult)} point`
             }
+            if(Decimal.cmp(H,new Decimal(2))>=0&&Upgrades.H_2==0)
+            {
+                pt5.style.display="inline";
+            }else pt5.style.display="none";
         }
         function addAtom_h()
         {
@@ -47,7 +64,6 @@
             {
                 Point=Point.minus(priceH);
                 H=H.plus(1);
-                Ptspeed=Ptspeed.plus(0.1);
                 priceH=priceH.mul(1.2);
                 update();
             }
@@ -64,6 +80,16 @@
                 await delay(inSec*1000);
                 Point=Point.plus(Ptspeed.mul(inSec));
                 update();
+            }
+        }
+        function buyH_2()
+        {
+            if(Decimal.cmp(Point,100)>=0)
+            {
+                Point=Point.minus(100);
+                pointMult=pointMult.mul(2);
+                update();
+                Upgrades.H_2=1;
             }
         }
         mainLoop();
