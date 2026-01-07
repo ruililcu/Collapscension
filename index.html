@@ -7,6 +7,7 @@
     <style>
         body
         {
+            font-family:"Cascadia Mono",sans-serif;
             background-color:black;
             color:aquamarine;
         }
@@ -24,6 +25,18 @@
         {
             transform:scale(0.9);
         }
+        .build
+        {
+            background-color:#354;
+            color:#fff;
+            display:none;
+        }
+        .upg
+        {
+            background-color:#345;
+            color:#fff;
+            display:none;
+        }
     </style>
 </head>
 <body>
@@ -31,19 +44,15 @@
     <script src="break_eternity.js"></script>
     <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()"id="4">+1 point</button>
     <br><h2 id="1"style="display:none;"></h2>
-    <br><button id="2"style="
-    background-color:#354;color:#fff;display:none;
-    "onclick="addAtom_h()"></button>
-    <br><button id="6"style="
-    background-color:#354;color:#fff;display:none;
-    "onclick="addAtom_2()"></button>
-    <br><button id="7"style="
-    background-color:#354;color:#fff;display:none;
-    "onclick="addAtom_3()"></button>
-    <p id="3">Current Version:V0.4β</p>
-    <br><button style="background-color:#345;color:#fff;"onclick="buyH_2()"id="5">
+    <br><button id="2" class="build" onclick="addAtom_h()"></button>
+    <br><button id="6" class="build" onclick="addAtom_2()"></button>
+    <br><button id="7" class="build" onclick="addAtom_3()"></button>
+    <br><button id="9" class="build" onclick="addm()"></button>
+    <br><button id="10" class="build" onclick="addM()"></button>
+    <p id="3">Current Version:V0.4.1β</p>
+    <br><button class="upg" onclick="buyH_2()"id="5">
         Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
-    <br><button style="background-color:#345;color:#fff;display:none;"onclick="buybp()"id="8">
+    <br><button class="upg" onclick="buybp()"id="8">
         Repeatable Base Purchase gain(Lv.0)|Cost:2000.00 Points</button>
     <script>
         const pt1=document.getElementById(1);
@@ -54,7 +63,9 @@
         const pt6=document.getElementById(6);
         const pt7=document.getElementById(7);
         const pt8=document.getElementById(8);
-        const inSec=1/60;
+        const pt9=document.getElementById(9);
+        const pt10=document.getElementById(10);
+        const realSec=1/60;
         let Point=new Decimal("0");
         let Ptspeed=new Decimal("0");
         let pointMult=new Decimal("1");
@@ -64,12 +75,23 @@
         let H=new Decimal("0");
         let CorNorO=new Decimal("0");
         let others=new Decimal("0");
+        let smallMolecule=new Decimal("0");
+        let bigMolecule=new Decimal("0");
+        let pH=new Decimal("0");
+        let pCorNorO=new Decimal("0");//p means purchased bulidings
+        let pothers=new Decimal("0");
+        let psmallMolecule=new Decimal("0");
+        let pbigMolecule=new Decimal("0");
         let gainH=new Decimal("0.1");
-        let gainCorNorO=new Decimal("0.1");
-        let gainothers=new Decimal("0.1");
+        let gainCorNorO=new Decimal("1.5");
+        let gainothers=new Decimal("11.8");
+        let gainsmall=new Decimal("0");
+        let gainbig=new Decimal("0");
         let priceH=new Decimal("4");
         let price2=new Decimal("150");
         let price3=new Decimal("1234.56");
+        let price4=new Decimal("1e4");
+        let price5=new Decimal("1e5");
         let bPurchaseGainPrice=new Decimal("2000");
         let Upgrades=
         {
@@ -82,33 +104,39 @@
             bPurchaseLevel:new Decimal(10)
         }
         const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
-        function gameStart()
+        function gameStart()//It is click func:D
         { 
-            Point=Point.plus(pointMult);
+            Point=Point.plus(pointMult).plus(Ptspeed.mul(1/4));
             pt1.style.display="inline";
             update();
         }
         function update()
         {
-            gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(H).plus(1).mul(0.1);
-            gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(CorNorO).plus(1).mul(1.5);
-            gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(others).plus(1).mul(11.8);
+            gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(pH).plus(1).mul(0.1);
+            gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(pCorNorO).plus(1).mul(1.5);
+            gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(pothers).plus(1).mul(11.8);
+            gainsmall=Upgrades.bPurchaseLevel.mul(0.05).mul(psmallMolecule).plus(1).mul(0.1);
+            gainbig=Upgrades.bPurchaseLevel.mul(0.05).mul(pbigMolecule).plus(1).mul(0.01);
             pt1.textContent=`You have ${Format(Point)} Points`;
             Ptspeed=H.mul(gainH).plus(CorNorO.mul(gainCorNorO)).plus(others.mul(gainothers));
             Ptspeed=Ptspeed.mul(pointMult);
             if(Decimal.cmp(Point,new Decimal(3))>=0)
             {
-                pt1.textContent+=`(${Format(Ptspeed)}/s)`;
+                pt1.textContent+=`(${Format(Ptspeed)}/s,Click will +25% of point speed)`;
                 pt2.style.display="inline";
                 pt2.textContent=`You have ${Format(H)} Hydrogens,every Hydrogens+ ${Format(pointMult.mul(gainH))} speed!
                 Buy a single Hydrogen|Cost:${Format(priceH)} Points`
-                pt4.textContent=`+${Format(pointMult)} point`
+                pt4.textContent=`+${Format(pointMult.plus(Ptspeed.mul(1/4)))} point`
                 pt6.textContent=`You have ${Format(CorNorO)} Carbon or Nitrogen or Oxygon,
                 every this+ ${Format(pointMult.mul(gainCorNorO))} speed!(Cost:${Format(price2)})`
                 pt7.textContent=`You have ${Format(others)} Other atoms,
                 every this+ ${Format(pointMult.mul(gainothers))} speed!(Cost:${Format(price3)})`
                 pt8.textContent=`Repeatable Base Purchase gain(Lv.${Format(Upgrades.bPurchaseLevel)},
                 +${Format(Upgrades.bPurchaseLevel.mul(5))}%)|Cost:${Format(bPurchaseGainPrice)} Points`
+                pt9.textContent=`You have ${Format(smallMolecule)} Amino acid/base pair,
+                every this+ ${Format(pointMult.mul(gainsmall))} speed!(Cost:${Format(price4)})`
+                pt10.textContent=`You have ${Format(bigMolecule)} protein/DNA,
+                every this+ ${Format(pointMult.mul(gainbig))} speed!(Cost:${Format(price5)})`
             }
             if(Decimal.cmp(H,new Decimal(2))>=0&&Upgrades.H_2==0)
             {
@@ -118,8 +146,13 @@
             if(Decimal.cmp(Point,new Decimal(987))>=0)
             {
                 pt7.style.display="inline";
-                if(Decimal.cmp(Upgrades.bPurchaseLevel,maxLevels.bPurchaseLevel)!=0)pt8.style.display="inline";
+                if(Decimal.cmp(Upgrades.bPurchaseLevel,maxLevels.bPurchaseLevel)<=0)pt8.style.display="inline";
                 else pt8.style.display="none";
+            }
+            if(Decimal.cmp(Point,new Decimal(3000))>=0)
+            {
+                pt9.style.display="inline";
+                pt10.style.display="inline";
             }
         }
         function addAtom_h()
@@ -128,6 +161,7 @@
             {
                 Point=Point.minus(priceH);
                 H=H.plus(1);
+                pH=pH.plus(1);
                 priceH=priceH.mul(1.2);
                 update();
             }
@@ -141,16 +175,25 @@
                 return `${(10**(p.log10().toNumber()%1)).toFixed(2)}e${Math.floor(p.log10().toNumber())}`;
             }
             else if(Decimal.cmp(p,new Decimal("eeeee9"))<0)return `e${Format(p.log10())}`;
-            else return `${p.mag}F${p.layer}`;
+            else return `${Math.log10(p.mag).toFixed(2)}F${Format(new Decimal(p.layer+1))}`;
         }
         async function mainLoop()
         {
             while(1)
             {
-                await delay(inSec*1000);
-                Point=Point.plus(Ptspeed.mul(inSec));
+                await delay(realSec*1000);
                 update();
+                Runtick(new Decimal(1))
             }
+        }
+        function Runtick(timespeed)
+        {
+            var inSec=timespeed.mul(realSec)
+            Point=Point.plus(Ptspeed.mul(inSec));
+            H=H.plus(gainsmall.mul(smallMolecule.mul(inSec)));
+            CorNorO=CorNorO.plus(gainsmall.mul(1/10).mul(smallMolecule).mul(inSec));
+            others=others.plus(gainsmall.mul(1/100).mul(smallMolecule).mul(inSec));
+            smallMolecule=smallMolecule.plus(gainbig.mul(bigMolecule).mul(inSec))
         }
         function buyH_2()
         {
@@ -168,6 +211,7 @@
             {
                 Point=Point.minus(price2);
                 CorNorO=CorNorO.plus(1);
+                pCorNorO=pCorNorO.plus(1);
                 price2=price2.mul(1.2);
                 update();
             }
@@ -178,6 +222,7 @@
             {
                 Point=Point.minus(price3);
                 others=others.plus(1);
+                pothers=pothers.plus(1);
                 price3=price3.mul(1.2);
                 update();
             }
@@ -188,7 +233,29 @@
             {
                 Point=Point.minus(bPurchaseGainPrice);
                 Upgrades.bPurchaseLevel=Upgrades.bPurchaseLevel.plus(1);
-                bPurchaseGainPrice=bPurchaseGainPrice.mul(1000);
+                bPurchaseGainPrice=bPurchaseGainPrice.mul(10);
+                update();
+            }
+        }
+        function addm()
+        {
+            if(Decimal.cmp(Point,price4)>=0)
+            {
+                Point=Point.minus(price4);
+                smallMolecule=smallMolecule.plus(1);
+                psmallMolecule=psmallMolecule.plus(1);
+                price4=price4.mul(1.2);
+                update();
+            }
+        }
+        function addM()
+        {
+            if(Decimal.cmp(Point,price5)>=0)
+            {
+                Point=Point.minus(price5);
+                bigMolecule=bigMolecule.plus(1);
+                pbigMolecule=pbigMolecule.plus(1);
+                price5=price5.mul(1.2);
                 update();
             }
         }
@@ -196,5 +263,3 @@
     </script>
 </body>
 </html>
-
-
