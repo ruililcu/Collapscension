@@ -4,15 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Collapscension</title>
+    <!--Including Poppins...-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body
         {
             font-family:"Cascadia Mono",sans-serif;
             background-color:black;
-            color:aquamarine;
+            color:limegreen;
         }
+        h1
+        {
+            text-align:center;
+            font-family:"Poppins","Cascadia Mono",sans-serif;
+            background-color:black;
+        }
+        h2{color:lightgreen;}
         button
         {
+            font-family:"Cascadia Code",sans-serif;
             color:white;
             background-color:darkgray;
             transition:all 0.4s ease;
@@ -31,30 +43,58 @@
             color:#fff;
             display:none;
         }
+        .glowtext{text-shadow: 0 0 3px white,0 0 7px silver}
         .upg
         {
             background-color:#345;
             color:#fff;
             display:none;
         }
+        .upg-completed
+        {
+            display:inline;
+            background-color:lime;
+            color:navy;
+            pointer-events:none;
+            cursor:not-allowed;
+        }
     </style>
 </head>
 <body>
-    <h1>Collapscension</h1>
+    <h1 id="0">Collapscension</h1>
+    <noscript>
+        <h2 style="color:red;"></&lt;/&gt;x</h2>
+        <p>Your Js isn't allowed</p>
+        <p>Please Enabled Js!</p>
+    </noscript>
     <script src="break_eternity.js"></script>
     <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()"id="4">+1 point</button>
-    <br><h2 id="1"style="display:none;"></h2>
+    <br><h2 class="glowtext"id="1"style="display:none;"></h2>
     <br><button id="2" class="build" onclick="addAtom_h()"></button>
     <br><button id="6" class="build" onclick="addAtom_2()"></button>
     <br><button id="7" class="build" onclick="addAtom_3()"></button>
     <br><button id="9" class="build" onclick="addm()"></button>
     <br><button id="10" class="build" onclick="addM()"></button>
-    <p id="3">Current Version:V0.4.1β</p>
+    <p id="3">Current Version:V0.4.2β</p>
+    <div style="background-color:navy;width:210px;">
+        <button onclick="
+            let saveData=prompt('Import:');
+            Import(saveData);
+            alert('Game Imported!')
+        ">Import(prompt)</button>
+        <button onclick="
+            Ex=Export();
+            navigator.clipboard.writeText(JSON.stringify(Ex));
+            alert('Game Exported!')
+        ">Export to you clipboard</button>
+        <button style="background-color:crimson;" onclick="RESET()">RESET THE GAME(Valid after refreshing)</button>
+    </div>
     <br><button class="upg" onclick="buyH_2()"id="5">
         Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
     <br><button class="upg" onclick="buybp()"id="8">
         Repeatable Base Purchase gain(Lv.0)|Cost:2000.00 Points</button>
     <script>
+        const _pt0=document.getElementById(0);
         const pt1=document.getElementById(1);
         const pt2=document.getElementById(2);
         const pt3=document.getElementById(3);
@@ -66,7 +106,8 @@
         const pt9=document.getElementById(9);
         const pt10=document.getElementById(10);
         const realSec=1/60;
-        let Point=new Decimal("0");
+        const SAVE_KEY="Collapscension/Stonelee";
+        let Point=new Decimal("-1");
         let Ptspeed=new Decimal("0");
         let pointMult=new Decimal("1");
         let Hmult=new Decimal("1");
@@ -122,32 +163,38 @@
             Ptspeed=Ptspeed.mul(pointMult);
             if(Decimal.cmp(Point,new Decimal(3))>=0)
             {
-                pt1.textContent+=`(${Format(Ptspeed)}/s,Click will +25% of point speed)`;
                 pt2.style.display="inline";
                 pt2.textContent=`You have ${Format(H)} Hydrogens,every Hydrogens+ ${Format(pointMult.mul(gainH))} speed!
                 Buy a single Hydrogen|Cost:${Format(priceH)} Points`
+                pt3.textContent=`(${Format(Ptspeed)}/s,Click will +25% of point speed)`;
                 pt4.textContent=`+${Format(pointMult.plus(Ptspeed.mul(1/4)))} point`
                 pt6.textContent=`You have ${Format(CorNorO)} Carbon or Nitrogen or Oxygon,
                 every this+ ${Format(pointMult.mul(gainCorNorO))} speed!(Cost:${Format(price2)})`
                 pt7.textContent=`You have ${Format(others)} Other atoms,
                 every this+ ${Format(pointMult.mul(gainothers))} speed!(Cost:${Format(price3)})`
-                pt8.textContent=`Repeatable Base Purchase gain(Lv.${Format(Upgrades.bPurchaseLevel)},
+                pt8.textContent=`Repeatable Base Purchase gain(Lv.${intFormat(Upgrades.bPurchaseLevel)},
                 +${Format(Upgrades.bPurchaseLevel.mul(5))}%)|Cost:${Format(bPurchaseGainPrice)} Points`
                 pt9.textContent=`You have ${Format(smallMolecule)} Amino acid/base pair,
-                every this+ ${Format(pointMult.mul(gainsmall))} speed!(Cost:${Format(price4)})`
+                every this+ ${Format(gainsmall)} atom speed!(Cost:${Format(price4)})`
                 pt10.textContent=`You have ${Format(bigMolecule)} protein/DNA,
-                every this+ ${Format(pointMult.mul(gainbig))} speed!(Cost:${Format(price5)})`
+                every this+ ${Format(gainbig)} Amino acid/base pair speed!(Cost:${Format(price5)})`
             }
             if(Decimal.cmp(H,new Decimal(2))>=0&&Upgrades.H_2==0)
             {
-                pt5.style.display="inline";
-                pt6.style.display="inline";
-            }else pt5.style.display="none";
+                pt5.className="upg"
+                pt5.style.display="inline"
+            }else if(Upgrades.H_2==maxLevels.H_2)pt5.className="upg-completed";
+            else pt5.className="upg";
+            if(Decimal.cmp(H,new Decimal(2))>=0)pt6.style.display="inline";
             if(Decimal.cmp(Point,new Decimal(987))>=0)
             {
                 pt7.style.display="inline";
-                if(Decimal.cmp(Upgrades.bPurchaseLevel,maxLevels.bPurchaseLevel)<=0)pt8.style.display="inline";
-                else pt8.style.display="none";
+                if(Decimal.cmp(Upgrades.bPurchaseLevel,maxLevels.bPurchaseLevel)<=0)
+                {
+                    pt8.className="upg";
+                    pt8.style.display="inline"
+                }
+                else pt8.className="upg-completed";
             }
             if(Decimal.cmp(Point,new Decimal(3000))>=0)
             {
@@ -175,7 +222,12 @@
                 return `${(10**(p.log10().toNumber()%1)).toFixed(2)}e${Math.floor(p.log10().toNumber())}`;
             }
             else if(Decimal.cmp(p,new Decimal("eeeee9"))<0)return `e${Format(p.log10())}`;
-            else return `${Math.log10(p.mag).toFixed(2)}F${Format(new Decimal(p.layer+1))}`;
+            else return `${Math.log10(p.mag).toFixed(2)}F${intFormat(new Decimal(p.layer+1))}`;
+        }
+        function intFormat(p)
+        {
+            if(Decimal.cmp(p,1e9)<0)return p.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,",");
+            else return Format(p)
         }
         async function mainLoop()
         {
@@ -259,7 +311,130 @@
                 update();
             }
         }
-        mainLoop();
+        function Export()
+        {
+            return{
+                Point:Point.toString(),
+                Ptspeed:Ptspeed.toString(),
+                pointMult:pointMult.toString(),
+                Hmult:Hmult.toString(),
+                mult2:mult2.toString(),
+                mult3:mult3.toString(),
+                H:H.toString(),
+                CorNorO:CorNorO.toString(),
+                others:others.toString(),
+                smallMolecule:smallMolecule.toString(),
+                bigMolecule:bigMolecule.toString(),
+                pH:pH.toString(),
+                pCorNorO:pCorNorO.toString(),
+                pothers:pothers.toString(),
+                psmallMolecule:psmallMolecule.toString(),
+                pbigMolecule:pbigMolecule.toString(),
+                gainH:gainH.toString(),
+                gainCorNorO:gainCorNorO.toString(),
+                gainothers:gainothers.toString(),
+                gainsmall:gainsmall.toString(),
+                gainbig:gainbig.toString(),
+                priceH:priceH.toString(),
+                price2:price2.toString(),
+                price3:price3.toString(),
+                price4:price4.toString(),
+                price5:price5.toString(),
+                bPurchaseGainPrice: bPurchaseGainPrice.toString(),
+                Upgrades:
+                {
+                    H_2:Upgrades.H_2,
+                    bPurchaseLevel:Upgrades.bPurchaseLevel.toString()
+                }
+            };
+        }
+        function Import(saveData)
+        {
+            if(!saveData)return;
+            try
+            {
+                saveData=JSON.parse(saveData);
+                Point=new Decimal(saveData.Point || "0");
+                Ptspeed=new Decimal(saveData.Ptspeed || "0");
+                pointMult=new Decimal(saveData.pointMult || "1");
+                Hmult=new Decimal(saveData.Hmult || "1");
+                mult2=new Decimal(saveData.mult2 || "1");
+                mult3=new Decimal(saveData.mult3 || "1");
+                H=new Decimal(saveData.H || "0");
+                CorNorO=new Decimal(saveData.CorNorO || "0");
+                others=new Decimal(saveData.others || "0");
+                smallMolecule=new Decimal(saveData.smallMolecule || "0");
+                bigMolecule=new Decimal(saveData.bigMolecule || "0");
+                pH=new Decimal(saveData.pH || "0");
+                pCorNorO=new Decimal(saveData.pCorNorO || "0");
+                pothers=new Decimal(saveData.pothers || "0");
+                psmallMolecule=new Decimal(saveData.psmallMolecule || "0");
+                pbigMolecule=new Decimal(saveData.pbigMolecule || "0");
+                gainH=new Decimal(saveData.gainH || "0.1");
+                gainCorNorO=new Decimal(saveData.gainCorNorO || "1.5");
+                gainothers=new Decimal(saveData.gainothers || "11.8");
+                gainsmall=new Decimal(saveData.gainsmall || "0");
+                gainbig =new Decimal(saveData.gainbig || "0");
+                priceH=new Decimal(saveData.priceH || "4");
+                price2=new Decimal(saveData.price2 || "150");
+                price3=new Decimal(saveData.price3 || "1234.56");
+                price4=new Decimal(saveData.price4 || "1e4");
+                price5=new Decimal(saveData.price5 || "1e5");
+                bPurchaseGainPrice=new Decimal(saveData.bPurchaseGainPrice || "2000");
+                Upgrades.H_2=saveData.Upgrades?.H_2 || 0;
+                Upgrades.bPurchaseLevel=new Decimal(saveData.Upgrades?.bPurchaseLevel || "0");
+                console.log("Save Imported");
+            }
+            catch(e)
+            {
+                console.error("SavingError!",e);
+                alert("Looks Like That's a Saving Error...");
+            }
+        }
+        function loading()
+        {
+            try
+            {
+                const saveData=localStorage.getItem(SAVE_KEY);
+                if(saveData) Import(saveData);
+                update(); 
+                gameStart();
+                console.log("Save Loaded");
+            }
+            catch (e)
+            {
+                console.error("LoadingError", e);
+            }
+        }
+        function autoSave()
+        {
+            try
+            {
+                const saveData = JSON.stringify(Export());
+                localStorage.setItem(SAVE_KEY, saveData);
+                console.log("Game Saved!", new Date().toLocaleString());}
+            catch(e)
+            {
+                console.error("AutoSaveError",e);
+            }
+        }
+        function RESET()
+        {
+            if(confirm("REALLY RESET YOUR GAME?THAT'S NO REWARD!")&&confirm("REALLY?²(AGAIN)"))
+            {
+                localStorage.removeItem(SAVE_KEY);
+                alert("Please Hit Ctrl+F5");
+            }
+        }
+        function run()
+        {
+            let hue=123;
+            setInterval(()=>{localStorage.setItem("Collapscension/Stonelee",JSON.stringify(Export()))},15000);
+            setInterval(()=>{hue+=0.2;hue%=360;_pt0.style.color=`hsl(${hue},75%,75%)`;},realSec);//Rainbow!
+            loading();
+            mainLoop();
+        }
+        run();//Game start from there not from gameStart()
     </script>
 </body>
 </html>
