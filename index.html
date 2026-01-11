@@ -58,6 +58,22 @@
             pointer-events:none;
             cursor:not-allowed;
         }
+        .tab-link
+        {
+            font-family:"Poppins","Cascadia Mono",sans-serif;
+            padding:10px 20px;
+            background-color:ivory;;
+            text-decoration:none;
+            color:black;
+        }
+        .tab-content
+        {
+            display:none;
+        }
+        .tab-content:target
+        {
+            display:block;
+        }
     </style>
 </head>
 <body>
@@ -67,32 +83,46 @@
         <p>Your Js isn't allowed</p>
         <p>Please Enabled Js!</p>
     </noscript>
+    <div>
+        <a id="12"href="#p12" class="tab-link">Play/Standard</a>
+        <a id="13"href="#p13" class="tab-link" style="background-color:aquamarine;display:none;">Research</a>
+    </div><br>
     <script src="break_eternity.js"></script>
-    <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()"id="4">+1 point</button>
     <br><h2 class="glowtext"id="1"style="display:none;"></h2>
-    <br><button id="2" class="build" onclick="addAtom_h()"></button>
-    <br><button id="6" class="build" onclick="addAtom_2()"></button>
-    <br><button id="7" class="build" onclick="addAtom_3()"></button>
-    <br><button id="9" class="build" onclick="addm()"></button>
-    <br><button id="10" class="build" onclick="addM()"></button>
-    <p id="3">Current Version:V0.4.2β</p>
-    <div style="background-color:navy;width:210px;">
-        <button onclick="
-            let saveData=prompt('Import:');
-            Import(saveData);
-            alert('Game Imported!')
-        ">Import(prompt)</button>
-        <button onclick="
-            Ex=Export();
-            navigator.clipboard.writeText(JSON.stringify(Ex));
-            alert('Game Exported!')
-        ">Export to you clipboard</button>
-        <button style="background-color:crimson;" onclick="RESET()">RESET THE GAME(Valid after refreshing)</button>
+    <div id="p12" class="tab-content">
+        <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()"id="4">+1 point</button>
+        <br><button id="2" class="build" onclick="addAtom_h()"></button>
+        <br><button id="6" class="build" onclick="addAtom_2()"></button>
+        <br><button id="7" class="build" onclick="addAtom_3()"></button>
+        <br><button id="9" class="build" onclick="addm()"></button>
+        <br><button id="10" class="build" onclick="addM()"></button>
+        <p id="3">Current Version:V0.5β</p>
+        <div style="background-color:navy;width:210px;">
+            <button onclick="
+                let saveData=prompt('Import:');
+                Import(saveData);
+                alert('Game Imported!')
+            ">Import(prompt)</button>
+            <button onclick="
+                Ex=Export();
+                navigator.clipboard.writeText(JSON.stringify(Ex));
+                alert('Game Exported!')
+            ">Export to you clipboard</button>
+            <button style="background-color:crimson;" onclick="RESET()">RESET THE GAME(Valid after refreshing)</button>
+        </div>
+        <br><button class="upg" onclick="buyH_2()"id="5">
+            Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
+        <br><button class="upg" onclick="buybp()"id="8">
+            Repeatable Base Purchase gain(Lv.0)|Cost:2000.00 Points</button>
     </div>
-    <br><button class="upg" onclick="buyH_2()"id="5">
-        Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
-    <br><button class="upg" onclick="buybp()"id="8">
-        Repeatable Base Purchase gain(Lv.0)|Cost:2000.00 Points</button>
+    <div id="p13" class="tab-content" style="background-color:#00341f;">
+        <h2 id="11" class="glowtext" style="color:aquamarine;">You Have 0.00 Cell</h2>
+        <p id="14">Your Cell will duplicate until 0.00 Cell(base at life)</p>
+        <br><button class="upg" onclick="buyciv1()"id="15">
+            1st Civilization Upgrade:Use Tools(x3 Point gain)|Cost:1,428,571 Points</button>
+        <br><button class="upg" onclick="buyciv2()"id="16">
+            Upgrade:Agricultural(Point gain base at Cells)|Cost:3 million Points</button>
+    </div>
     <script>
         const _pt0=document.getElementById(0);
         const pt1=document.getElementById(1);
@@ -105,10 +135,17 @@
         const pt8=document.getElementById(8);
         const pt9=document.getElementById(9);
         const pt10=document.getElementById(10);
+        const pt11=document.getElementById(11);
+        const pt12=document.getElementById(12);
+        const pt13=document.getElementById(13);
+        const pt14=document.getElementById(14);
+        const pt15=document.getElementById(15);
+        const pt16=document.getElementById(16);
         const realSec=1/60;
         const SAVE_KEY="Collapscension/Stonelee";
         let Point=new Decimal("-1");
         let Ptspeed=new Decimal("0");
+        let GpointMult=new Decimal("1");
         let pointMult=new Decimal("1");
         let Hmult=new Decimal("1");
         let mult2=new Decimal("1");
@@ -134,15 +171,21 @@
         let price4=new Decimal("1e4");
         let price5=new Decimal("1e5");
         let bPurchaseGainPrice=new Decimal("2000");
+        let Cell=new Decimal("1");
+        let Life=new Decimal("0");
         let Upgrades=
         {
             H_2:0,
-            bPurchaseLevel:new Decimal(0)
+            bPurchaseLevel:new Decimal(0),
+            civ1:0,
+            civ2:0
         }
         let maxLevels=
         {
             H_2:1,
-            bPurchaseLevel:new Decimal(10)
+            bPurchaseLevel:new Decimal(10),
+            civ1:1,
+            civ2:1
         }
         const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
         function gameStart()//It is click func:D
@@ -153,6 +196,8 @@
         }
         function update()
         {
+            pointMult=GpointMult;
+            if(Upgrades.civ2)pointMult=pointMult.mul(Cell.pow(0.05))
             gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(pH).plus(1).mul(0.1);
             gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(pCorNorO).plus(1).mul(1.5);
             gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(pothers).plus(1).mul(11.8);
@@ -178,6 +223,8 @@
                 every this+ ${Format(gainsmall)} atom speed!(Cost:${Format(price4)})`
                 pt10.textContent=`You have ${Format(bigMolecule)} protein/DNA,
                 every this+ ${Format(gainbig)} Amino acid/base pair speed!(Cost:${Format(price5)})`
+                pt11.textContent=`You have ${Format(Cell.sub(1))} Cells and ${Format(Life)} Lifes.`;
+                pt14.textContent=`Your Cell will duplicate until ${Format(Life.pow(1.5))} Cell(base at life)`
             }
             if(Decimal.cmp(H,new Decimal(2))>=0&&Upgrades.H_2==0)
             {
@@ -200,6 +247,30 @@
             {
                 pt9.style.display="inline";
                 pt10.style.display="inline";
+            }
+            if(Decimal.cmp(bigMolecule,1)>=0)
+            {
+                pt11.style.display="inline";
+                pt13.style.display="inline";
+                if(Decimal.cmp(Upgrades.civ1,maxLevels.civ1)<0)
+                {
+                    pt15.className="upg";
+                    pt15.style.display="inline"
+                }
+                else pt15.className="upg-completed";
+            }
+            if(Decimal.cmp(bigMolecule,3)>=0)
+            {   
+                if(Decimal.cmp(Upgrades.civ2,maxLevels.civ2)<0)
+                {
+                    pt16.className="upg";
+                    pt16.style.display="inline"
+                }
+                else 
+                {
+                    pt16.className="upg-completed";
+                    pt16.textContent=`Upgrade:Agricultural|Current:x${Format(Cell.pow(0.05))}`
+                }
             }
         }
         function addAtom_h()
@@ -246,13 +317,15 @@
             CorNorO=CorNorO.plus(gainsmall.mul(1/10).mul(smallMolecule).mul(inSec));
             others=others.plus(gainsmall.mul(1/100).mul(smallMolecule).mul(inSec));
             smallMolecule=smallMolecule.plus(gainbig.mul(bigMolecule).mul(inSec))
+            Life=Life.plus(bigMolecule.mul(inSec))
+            if(Decimal.cmp(Cell,Life.pow(1.5))==-1)Cell=Cell.mul(1.001);
         }
         function buyH_2()
         {
             if(Decimal.cmp(Point,100)>=0)
             {
                 Point=Point.minus(100);
-                pointMult=pointMult.mul(2);
+                GpointMult=GpointMult.mul(2);
                 update();
                 Upgrades.H_2=1;
             }
@@ -311,6 +384,25 @@
                 update();
             }
         }
+        function buyciv1()
+        {
+            if(Decimal.cmp(Point,1428571)>=0)
+            {
+                Point=Point.minus(1428571);
+                GpointMult=GpointMult.mul(3);
+                update();
+                Upgrades.civ1=1;
+            }
+        }
+        function buyciv2()
+        {
+            if(Decimal.cmp(Point,3e6)>=0)
+            {
+                Point=Point.minus(3e6);
+                update();
+                Upgrades.civ2=1;
+            }
+        }
         function Export()
         {
             return{
@@ -340,11 +432,15 @@
                 price3:price3.toString(),
                 price4:price4.toString(),
                 price5:price5.toString(),
+                Cell:Cell.toString(),
+                Life:Life.toString(),
                 bPurchaseGainPrice: bPurchaseGainPrice.toString(),
                 Upgrades:
                 {
                     H_2:Upgrades.H_2,
-                    bPurchaseLevel:Upgrades.bPurchaseLevel.toString()
+                    bPurchaseLevel:Upgrades.bPurchaseLevel.toString(),
+                    civ1:Upgrades.civ1,
+                    civ2:Upgrades.civ2
                 }
             };
         }
@@ -380,9 +476,13 @@
                 price3=new Decimal(saveData.price3 || "1234.56");
                 price4=new Decimal(saveData.price4 || "1e4");
                 price5=new Decimal(saveData.price5 || "1e5");
+                Cell=new Decimal(saveData.Cell || "1");
+                Life=new Decimal(saveData.Life || "0");
                 bPurchaseGainPrice=new Decimal(saveData.bPurchaseGainPrice || "2000");
                 Upgrades.H_2=saveData.Upgrades?.H_2 || 0;
                 Upgrades.bPurchaseLevel=new Decimal(saveData.Upgrades?.bPurchaseLevel || "0");
+                Upgrades.civ1=saveData.Upgrades?.civ1 || 0;
+                Upgrades.civ2=saveData.Upgrades?.civ2 || 0;
                 console.log("Save Imported");
             }
             catch(e)
