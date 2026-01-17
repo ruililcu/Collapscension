@@ -31,6 +31,7 @@
         }
         button:hover
         {
+            box-shadow:0 0 3px white,0 0 7px silver;
             transform:scale(1.2);
         }
         button:active
@@ -43,7 +44,7 @@
             color:#fff;
             display:none;
         }
-        .glowtext{text-shadow: 0 0 3px white,0 0 7px silver}
+        .glowtext{text-shadow:0 0 3px white,0 0 7px silver}
         .upg
         {
             background-color:#345;
@@ -108,12 +109,12 @@
                 navigator.clipboard.writeText(JSON.stringify(Ex));
                 alert('Game Exported!')
             ">Export to you clipboard</button>
-            <button style="background-color:crimson;" onclick="RESET()">RESET THE GAME(Valid after refreshing)</button>
+            <button style="background-color:crimson;" onclick="RESET()">RESET THE GAME</button>
         </div>
         <br><button class="upg" onclick="buyH_2()"id="5">
             Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
         <br><button class="upg" onclick="buybp()"id="8">
-            Repeatable Base Purchase gain(Lv.0)|Cost:2000.00 Points</button>
+            Repeatable Base Purchase gain(Lv.0)|Cost:2,000.00 Points</button>
     </div>
     <div id="p13" class="tab-content" style="background-color:#00341f;">
         <h2 id="11" class="glowtext" style="color:aquamarine;">You Have 0.00 Cell</h2>
@@ -121,7 +122,11 @@
         <br><button class="upg" onclick="buyciv1()"id="15">
             1st Civilization Upgrade:Use Tools(x3 Point gain)|Cost:1,428,571 Points</button>
         <br><button class="upg" onclick="buyciv2()"id="16">
-            Upgrade:Agricultural(Point gain base at Cells)|Cost:3 million Points</button>
+            Upgrade:Agricultural(amino acid/base pair gain base at Cells)|Cost:3 million Points</button>
+        <br><button class="upg" onclick="buyciv3()"id="17">
+            Upgrade:Calender(atom gain base at Time played)|Cost:10 million Points</button>
+        <br><button class="upg" onclick="buyciv4()"id="18">
+            Repeatable Expanded Purchase gain(Also Called Civ.Countries,Lv.0)|Cost:40,000,000 Points</button>
     </div>
     <script>
         const _pt0=document.getElementById(0);
@@ -141,12 +146,16 @@
         const pt14=document.getElementById(14);
         const pt15=document.getElementById(15);
         const pt16=document.getElementById(16);
+        const pt17=document.getElementById(17);
+        const pt18=document.getElementById(18);
         const realSec=1/60;
         const SAVE_KEY="Collapscension/Stonelee";
         let Point=new Decimal("-1");
         let Ptspeed=new Decimal("0");
         let GpointMult=new Decimal("1");
         let pointMult=new Decimal("1");
+        let atommult=new Decimal("1");
+        let molemult=new Decimal("1");
         let Hmult=new Decimal("1");
         let mult2=new Decimal("1");
         let mult3=new Decimal("1");
@@ -171,6 +180,8 @@
         let price4=new Decimal("1e4");
         let price5=new Decimal("1e5");
         let bPurchaseGainPrice=new Decimal("2000");
+        let epPrice=new Decimal("4e7");
+        let Tickesplayed=new Decimal("0");
         let Cell=new Decimal("1");
         let Life=new Decimal("0");
         let Upgrades=
@@ -178,14 +189,18 @@
             H_2:0,
             bPurchaseLevel:new Decimal(0),
             civ1:0,
-            civ2:0
+            civ2:0,
+            civ3:0,
+            civ4:new Decimal(0)
         }
         let maxLevels=
         {
             H_2:1,
             bPurchaseLevel:new Decimal(10),
             civ1:1,
-            civ2:1
+            civ2:1,
+            civ3:1,
+            civ4:new Decimal(5)
         }
         const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
         function gameStart()//It is click func:D
@@ -194,38 +209,46 @@
             pt1.style.display="inline";
             update();
         }
-        function update()
+        function preupdt()
         {
             pointMult=GpointMult;
-            if(Upgrades.civ2)pointMult=pointMult.mul(Cell.pow(0.05))
-            gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(pH).plus(1).mul(0.1);
-            gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(pCorNorO).plus(1).mul(1.5);
-            gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(pothers).plus(1).mul(11.8);
-            gainsmall=Upgrades.bPurchaseLevel.mul(0.05).mul(psmallMolecule).plus(1).mul(0.1);
-            gainbig=Upgrades.bPurchaseLevel.mul(0.05).mul(pbigMolecule).plus(1).mul(0.01);
+            if(Upgrades.civ2)molemult=new Decimal(Cell.pow(0.05))
+            if(Upgrades.civ3)atommult=new Decimal((Tickesplayed.plus(10)).log10())
+            gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(pH).plus(1).mul(0.1).mul(Upgrades.civ4.mul(0.01).plus(1).pow(pH));
+            gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(pCorNorO).plus(1).mul(1.5).mul(Upgrades.civ4.mul(0.01).plus(1).pow(pCorNorO));
+            gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(pothers).plus(1).mul(11.8).mul(Upgrades.civ4.mul(0.01).plus(1).pow(pothers));
+            gainsmall=Upgrades.bPurchaseLevel.mul(0.05).mul(psmallMolecule).plus(1).mul(0.1).mul(Upgrades.civ4.mul(0.01).plus(1).pow(psmallMolecule));
+            gainbig=Upgrades.bPurchaseLevel.mul(0.05).mul(pbigMolecule).plus(1).mul(0.01).mul(Upgrades.civ4.mul(0.01).plus(1).pow(pbigMolecule));
             pt1.textContent=`You have ${Format(Point)} Points`;
             Ptspeed=H.mul(gainH).plus(CorNorO.mul(gainCorNorO)).plus(others.mul(gainothers));
-            Ptspeed=Ptspeed.mul(pointMult);
-            if(Decimal.cmp(Point,new Decimal(3))>=0)
-            {
-                pt2.style.display="inline";
-                pt2.textContent=`You have ${Format(H)} Hydrogens,every Hydrogens+ ${Format(pointMult.mul(gainH))} speed!
-                Buy a single Hydrogen|Cost:${Format(priceH)} Points`
-                pt3.textContent=`(${Format(Ptspeed)}/s,Click will +25% of point speed)`;
-                pt4.textContent=`+${Format(pointMult.plus(Ptspeed.mul(1/4)))} point`
-                pt6.textContent=`You have ${Format(CorNorO)} Carbon or Nitrogen or Oxygon,
-                every this+ ${Format(pointMult.mul(gainCorNorO))} speed!(Cost:${Format(price2)})`
-                pt7.textContent=`You have ${Format(others)} Other atoms,
-                every this+ ${Format(pointMult.mul(gainothers))} speed!(Cost:${Format(price3)})`
-                pt8.textContent=`Repeatable Base Purchase gain(Lv.${intFormat(Upgrades.bPurchaseLevel)},
-                +${Format(Upgrades.bPurchaseLevel.mul(5))}%)|Cost:${Format(bPurchaseGainPrice)} Points`
-                pt9.textContent=`You have ${Format(smallMolecule)} Amino acid/base pair,
-                every this+ ${Format(gainsmall)} atom speed!(Cost:${Format(price4)})`
-                pt10.textContent=`You have ${Format(bigMolecule)} protein/DNA,
-                every this+ ${Format(gainbig)} Amino acid/base pair speed!(Cost:${Format(price5)})`
-                pt11.textContent=`You have ${Format(Cell.sub(1))} Cells and ${Format(Life)} Lifes.`;
-                pt14.textContent=`Your Cell will duplicate until ${Format(Life.pow(1.5))} Cell(base at life)`
-            }
+            Ptspeed=Ptspeed.mul(pointMult);   
+        }
+        function lotsupdt()
+        {
+            pt2.style.display="inline";
+            pt2.textContent=`You have ${Format(H)} Hydrogens,every Hydrogens+ ${Format(pointMult.mul(gainH))} speed!
+            Buy a single Hydrogen|Cost:${Format(priceH)} Points`
+            pt3.textContent=`(${Format(Ptspeed)}/s,Click will +25% of point speed)`;
+            pt4.textContent=`+${Format(pointMult.plus(Ptspeed.mul(1/4)))} point`
+            pt6.textContent=`You have ${Format(CorNorO)} Carbon or Nitrogen or Oxygon,
+            every this+ ${Format(pointMult.mul(gainCorNorO))} speed!(Cost:${Format(price2)})`
+            pt7.textContent=`You have ${Format(others)} Other atoms,
+            every this+ ${Format(pointMult.mul(gainothers))} speed!(Cost:${Format(price3)})`
+            pt8.textContent=`Repeatable Base Purchase gain(Lv.${intFormat(Upgrades.bPurchaseLevel)},
+            +${Format(Upgrades.bPurchaseLevel.mul(5))}%)|Cost:${Format(bPurchaseGainPrice)} Points`
+            pt9.textContent=`You have ${Format(smallMolecule)} Amino acid/base pair,
+            every this+ ${Format(gainsmall.mul(atommult))} atom speed!(Cost:${Format(price4)})`
+            pt10.textContent=`You have ${Format(bigMolecule)} protein/DNA,
+            every this+ ${Format(gainbig.mul(molemult))} Amino acid/base pair speed!(Cost:${Format(price5)})`
+            pt11.textContent=`You have ${Format(Cell.sub(1))} Cells and ${Format(Life)} Lifes.`;
+            pt14.textContent=`Your Cell will duplicate until ${Format(Life.pow(1.5).plus(1))} Cell(base at life)`
+            pt18.textContent=`Repeatable Expanded Purchase gain(Civ.Countries Lv.${intFormat(Upgrades.civ4)},
+            +${Format(Upgrades.civ4.mul(1))}%)|Cost:${Format(epPrice)} Points`
+        }
+        function update()
+        {
+            preupdt();
+            if(Decimal.cmp(Point,new Decimal(3))>=0)lotsupdt();
             if(Decimal.cmp(H,new Decimal(2))>=0&&Upgrades.H_2==0)
             {
                 pt5.className="upg"
@@ -236,7 +259,7 @@
             if(Decimal.cmp(Point,new Decimal(987))>=0)
             {
                 pt7.style.display="inline";
-                if(Decimal.cmp(Upgrades.bPurchaseLevel,maxLevels.bPurchaseLevel)<=0)
+                if(Decimal.cmp(Upgrades.bPurchaseLevel,maxLevels.bPurchaseLevel)<0)
                 {
                     pt8.className="upg";
                     pt8.style.display="inline"
@@ -272,6 +295,31 @@
                     pt16.textContent=`Upgrade:Agricultural|Current:x${Format(Cell.pow(0.05))}`
                 }
             }
+            if(Decimal.cmp(bigMolecule,5)>=0)
+            {   
+                if(Decimal.cmp(Upgrades.civ3,maxLevels.civ3)<0)
+                {
+                    pt17.className="upg";
+                    pt17.style.display="inline"
+                }
+                else 
+                {
+                    pt17.className="upg-completed";
+                    pt17.textContent=`Upgrade:Calender|Current:x${Format((Tickesplayed.plus(10)).log10())}`
+                }
+            }
+            if(Decimal.cmp(bigMolecule,7)>=0)
+            {   
+                if(Decimal.cmp(Upgrades.civ4,maxLevels.civ4)<0)
+                {
+                    pt18.className="upg";
+                    pt18.style.display="inline"
+                }
+                else 
+                {
+                    pt18.className="upg-completed";
+                }
+            }
         }
         function addAtom_h()
         {
@@ -286,6 +334,8 @@
         }
         function Format(p)
         {
+            if(p.isNaN)return "???"
+            if(!p.isFinite())return "Ω"
             if(Decimal.cmp(p,1e6)<0)return p.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,",");
             if(Decimal.cmp(p,1e9)<0)return p.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,",");
             else if(Decimal.cmp(p,new Decimal("ee4"))<0)
@@ -313,12 +363,13 @@
         {
             var inSec=timespeed.mul(realSec)
             Point=Point.plus(Ptspeed.mul(inSec));
-            H=H.plus(gainsmall.mul(smallMolecule.mul(inSec)));
-            CorNorO=CorNorO.plus(gainsmall.mul(1/10).mul(smallMolecule).mul(inSec));
-            others=others.plus(gainsmall.mul(1/100).mul(smallMolecule).mul(inSec));
-            smallMolecule=smallMolecule.plus(gainbig.mul(bigMolecule).mul(inSec))
+            H=H.plus(gainsmall.mul(smallMolecule).mul(inSec).mul(atommult));
+            CorNorO=CorNorO.plus(gainsmall.mul(1/10).mul(smallMolecule).mul(inSec).mul(atommult));
+            others=others.plus(gainsmall.mul(1/100).mul(smallMolecule).mul(inSec).mul(atommult));
+            smallMolecule=smallMolecule.plus(gainbig.mul(bigMolecule).mul(inSec).mul(molemult))
             Life=Life.plus(bigMolecule.mul(inSec))
-            if(Decimal.cmp(Cell,Life.pow(1.5))==-1)Cell=Cell.mul(1.001);
+            if(Decimal.cmp(Cell,Life.pow(1.5).plus(1))==-1)Cell=Cell.mul(1.001).pow(timespeed);
+            Tickesplayed=Tickesplayed.plus(1);
         }
         function buyH_2()
         {
@@ -403,12 +454,34 @@
                 Upgrades.civ2=1;
             }
         }
+        function buyciv3()
+        {
+            if(Decimal.cmp(Point,1e7)>=0)
+            {
+                Point=Point.minus(1e7);
+                update();
+                Upgrades.civ3=1;
+            }
+        }
+        function buyciv4()
+        {
+            if(Decimal.cmp(Point,epPrice)>=0)
+            {
+                Point=Point.minus(epPrice);
+                update();
+                Upgrades.civ4=Upgrades.civ4.plus(1);
+                epPrice=epPrice.mul(21);
+            }
+        }
         function Export()
         {
             return{
                 Point:Point.toString(),
                 Ptspeed:Ptspeed.toString(),
                 pointMult:pointMult.toString(),
+                GpointMult:pointMult.toString(),
+                atommult:atommult.toString(),
+                molemult:molemult.toString(),
                 Hmult:Hmult.toString(),
                 mult2:mult2.toString(),
                 mult3:mult3.toString(),
@@ -434,13 +507,16 @@
                 price5:price5.toString(),
                 Cell:Cell.toString(),
                 Life:Life.toString(),
-                bPurchaseGainPrice: bPurchaseGainPrice.toString(),
+                Tickesplayed:Tickesplayed.toString(),
+                bPurchaseGainPrice:bPurchaseGainPrice.toString(),
                 Upgrades:
                 {
                     H_2:Upgrades.H_2,
                     bPurchaseLevel:Upgrades.bPurchaseLevel.toString(),
                     civ1:Upgrades.civ1,
-                    civ2:Upgrades.civ2
+                    civ2:Upgrades.civ2,
+                    civ3:Upgrades.civ3,
+                    civ4:Upgrades.civ4.toString()
                 }
             };
         }
@@ -452,8 +528,10 @@
                 saveData=JSON.parse(saveData);
                 Point=new Decimal(saveData.Point || "0");
                 Ptspeed=new Decimal(saveData.Ptspeed || "0");
+                GpointMult=new Decimal(saveData.GpointMult || "1");
                 pointMult=new Decimal(saveData.pointMult || "1");
-                Hmult=new Decimal(saveData.Hmult || "1");
+                atommult=new Decimal(saveData.atommult || "1");
+                molemult=new Decimal(saveData.molemult || "1");
                 mult2=new Decimal(saveData.mult2 || "1");
                 mult3=new Decimal(saveData.mult3 || "1");
                 H=new Decimal(saveData.H || "0");
@@ -478,11 +556,15 @@
                 price5=new Decimal(saveData.price5 || "1e5");
                 Cell=new Decimal(saveData.Cell || "1");
                 Life=new Decimal(saveData.Life || "0");
+                Tickesplayed=new Decimal(saveData.Tickesplayed || "0");
                 bPurchaseGainPrice=new Decimal(saveData.bPurchaseGainPrice || "2000");
+                epPrice=new Decimal(saveData.bPurchaseGainPrice || "4e7");
                 Upgrades.H_2=saveData.Upgrades?.H_2 || 0;
                 Upgrades.bPurchaseLevel=new Decimal(saveData.Upgrades?.bPurchaseLevel || "0");
                 Upgrades.civ1=saveData.Upgrades?.civ1 || 0;
                 Upgrades.civ2=saveData.Upgrades?.civ2 || 0;
+                Upgrades.civ3=saveData.Upgrades?.civ3 || 0;
+                Upgrades.civ4=new Decimal(saveData.Upgrades?.civ4 || "0");
                 console.log("Save Imported");
             }
             catch(e)
@@ -501,7 +583,7 @@
                 gameStart();
                 console.log("Save Loaded");
             }
-            catch (e)
+            catch(e)
             {
                 console.error("LoadingError", e);
             }
@@ -523,7 +605,7 @@
             if(confirm("REALLY RESET YOUR GAME?THAT'S NO REWARD!")&&confirm("REALLY?²(AGAIN)"))
             {
                 localStorage.removeItem(SAVE_KEY);
-                alert("Please Hit Ctrl+F5");
+                location.reload();
             }
         }
         function run()
@@ -538,3 +620,4 @@
     </script>
 </body>
 </html>
+
