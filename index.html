@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,11 +27,12 @@
         {
             font-family:"Cascadia Code",sans-serif;
             color:white;
-            background-color:darkgray;
+            background-color:rgba(123,130,140,123);
             transition:all 0.4s ease;
         }
         button:hover
         {
+            background-color:#6e82af;
             box-shadow:0 0 3px white,0 0 7px silver;
             transform:scale(1.2);
         }
@@ -72,17 +72,41 @@
         .tab-content
         {
             display:none;
+            background:linear-gradient(rgba(0,5,15,0.4),rgba(0,5,15,0.4)),url('logo.png');
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
         }
         .tab-content:target
         {
             display:block;
         }
-        .bg
+        .progress-wrapper
         {
-            background:linear-gradient(rgba(0,5,15,0.4),rgba(0,5,15,0.4)),url('logo.png');
-            background-size:cover;
-            background-position:center;
-            background-repeat:no-repeat;
+            position:relative;
+            width:700px;
+            height:50px;
+            display:inline-block;
+        }
+        .progress-wrapper progress
+        {
+            width:100%;
+            height:100%;
+            white-space:nowrap;
+            -webkit-appearance:none;
+            -moz-appearance:none;
+            appearance:none;
+        }
+        .progress-label
+        {
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            color:lightgreen;
+            pointer-events:none;  
+            z-index:1;
+            margin:none;
         }
         ::-webkit-scrollbar-track
         {
@@ -91,57 +115,75 @@
     </style>
 </head>
 <body>
-    <div class="bg">
-        <h1 id="0">Collapscension</h1>
-        <noscript>
-            <h2 style="color:red;"></&lt;/&gt;x</h2>
-            <p>Your Js isn't allowed</p>
-            <p>Please Enabled Js!</p>
-        </noscript>
-        <div>
-            <a id="12"href="#p12" class="tab-link">Play/Standard</a>
-            <a id="13"href="#p13" class="tab-link" style="background-color:aquamarine;display:none;">Research</a>
-        </div><br>
-        <script src="break_eternity.js"></script>
-        <br><h2 class="glowtext"id="1"style="display:none;"></h2>
-        <div id="p12" class="tab-content">
-            <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()"id="4">+1 point</button>
-            <br><button id="2" class="build" onclick="addAtom_h()"></button>
-            <br><button id="6" class="build" onclick="addAtom_2()"></button>
-            <br><button id="7" class="build" onclick="addAtom_3()"></button>
-            <br><button id="9" class="build" onclick="addm()"></button>
-            <br><button id="10" class="build" onclick="addM()"></button>
-            <p id="3">Current Version:V0.5.2β</p>
-            <div style="background-color:navy;width:210px;">
-                <button onclick="
-                    let saveData=prompt('Import:');
-                    Import(saveData);
-                    alert('Game Imported!')
-                ">Import(prompt)</button>
-                <button onclick="
-                    Ex=Export();
-                    navigator.clipboard.writeText(JSON.stringify(Ex));
-                    alert('Game Exported!')
-                ">Export to you clipboard</button>
-                <button style="background-color:crimson;" onclick="RESET()">RESET THE GAME</button>
+    <h1 id="0">Collapscension</h1>
+    <noscript>
+        <h2 style="color:red;"></&lt;/&gt;x</h2>
+        <p>Your Js isn't allowed</p>
+        <p>Please Enabled Js!</p>
+    </noscript>
+    <div>
+        <a id="12"href="#p12" class="tab-link">Play/Standard</a>
+        <a id="13"href="#p13" class="tab-link" style="background-color:aquamarine;display:none;">Research</a>
+        <a id="19"href="#p19" class="tab-link" style="background-color:cyan;display:none;">Presitge</a>
+    </div><br>
+    <script src="break_eternity.js"></script>
+    <br><h2 class="glowtext"id="1"style="display:none;"></h2>
+    <div id="p12" class="tab-content">
+        <button style="border-radius:123px;width:100px;height:100px;"onclick="gameStart()"id="4">+1 point</button>
+        <br><button id="2" class="build" onclick="addAtom_h()"></button>
+        <br><button id="6" class="build" onclick="addAtom_2()"></button>
+        <br><button id="7" class="build" onclick="addAtom_3()"></button>
+        <br><button id="9" class="build" onclick="addm()"></button>
+        <br><button id="10" class="build" onclick="addM()"></button>
+        <br><button id="24" class="build" style="width:100px;height:25px;"onclick="maxAll()">Max All</button>
+        <p id="3">Current Version:V0.6β(1 month old)</p>
+        <div style="background-color:navy;width:210px;">
+            <button onclick="
+                let saveData=prompt('Import:');
+                Import(saveData);
+                alert('Game Imported!')
+            ">Import(prompt)</button>
+            <button onclick="
+                Ex=Export();
+                navigator.clipboard.writeText(JSON.stringify(Ex));
+                alert('Game Exported!')
+            ">Export to you clipboard</button>
+            <button style="background-color:crimson;" onclick="RESET()">RESET THE GAME</button>
+        </div>
+        <br><button class="upg" onclick="buyH_2()"id="5">
+            Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
+        <br><button class="upg" onclick="buybp()"id="8">
+            Repeatable Base Purchase gain(Lv.0)|Cost:2,000.00 Points</button>
+    </div>
+    <div id="p13" class="tab-content" style="background-color:url('logo.png'),rgba(0,150,122,0.4);">
+        <h2 id="11" class="glowtext" style="color:aquamarine;">You Have 0.00 Cell</h2>
+        <p id="14">Your Cell will duplicate until 0.00 Cell(base at life)</p>
+        <br><button class="upg" onclick="buyciv1()"id="15">
+            1st Civilization Upgrade:Use Tools(x3 Point gain)|Cost:1,428,571 Points</button>
+        <br><button class="upg" onclick="buyciv2()"id="16">
+            Upgrade:Agricultural(amino acid/base pair gain base at Cells)|Cost:3 million Points</button>
+        <br><button class="upg" onclick="buyciv3()"id="17">
+            Upgrade:Calender(atom gain base at Time played)|Cost:10 million Points</button>
+        <br><button class="upg" onclick="buyciv4()"id="18">
+            Repeatable Expanded Purchase gain(Also Called Civ.Countries,Lv.0)|Cost:40,000,000 Points</button>
+        <div id="26">
+            <h3 class="glowtext" id="27">You have 0.00 Research Points(0.00/s)</h3>
+            <h3 class="glowtext" id="28" style="color:brown;">Your Research Level is Copper.Level up:1000.00</h3>
+        </div>
+    </div>
+    <div id="p19" class="tab-content" style="background-color:url('logo.png'),rgba(0,106,121,0.4);">
+        <div style="text-align:center;">
+            <h2 id="20" class="glowtext" style="color:cyan;">You Have 0.00 Presitge Points(PP)</h2>
+            <br>
+            <button style="background-color:cyan;color:black;width:100px;height:25px;" onclick="doPrestige()">Presitge</button>
+            <br>
+            <div class="progress-wrapper">
+                <progress id="21" value="0" max="12"></progress>
+                <span id="22" class="progress-label">Progress To Prestige</span>
             </div>
-            <br><button class="upg" onclick="buyH_2()"id="5">
-                Upgrade:buy hydrogen₂(H₂):x2 point gain|Cost:100 Points</button>
-            <br><button class="upg" onclick="buybp()"id="8">
-                Repeatable Base Purchase gain(Lv.0)|Cost:2,000.00 Points</button>
+            <p id="23">Your PP gives you a mult</p>
         </div>
-        <div id="p13" class="tab-content" style="background-color:#00341f;">
-            <h2 id="11" class="glowtext" style="color:aquamarine;">You Have 0.00 Cell</h2>
-            <p id="14">Your Cell will duplicate until 0.00 Cell(base at life)</p>
-            <br><button class="upg" onclick="buyciv1()"id="15">
-                1st Civilization Upgrade:Use Tools(x3 Point gain)|Cost:1,428,571 Points</button>
-            <br><button class="upg" onclick="buyciv2()"id="16">
-                Upgrade:Agricultural(amino acid/base pair gain base at Cells)|Cost:3 million Points</button>
-            <br><button class="upg" onclick="buyciv3()"id="17">
-                Upgrade:Calender(atom gain base at Time played)|Cost:10 million Points</button>
-            <br><button class="upg" onclick="buyciv4()"id="18">
-                Repeatable Expanded Purchase gain(Also Called Civ.Countries,Lv.0)|Cost:40,000,000 Points</button>
-        </div>
+        <p id="25">You have Prestige 0 times.You need 3 Times of presitge to unlock Max All.</p>
     </div>
     <script>
         const _pt0=document.getElementById(0);
@@ -163,9 +205,20 @@
         const pt16=document.getElementById(16);
         const pt17=document.getElementById(17);
         const pt18=document.getElementById(18);
+        const pt19=document.getElementById(19);
+        const pt20=document.getElementById(20);
+        const pt21=document.getElementById(21);
+        const pt22=document.getElementById(22);
+        const pt23=document.getElementById(23);
+        const pt24=document.getElementById(24);
+        const pt25=document.getElementById(25);
+        const pt26=document.getElementById(26);
+        const pt27=document.getElementById(27);
+        const pt28=document.getElementById(28);
         const realSec=1/60;
-        const SAVE_KEY="Collapscension/Stonelee";
-        let Point=new Decimal("-1");
+        const SAVE_KEY="Collapscension/Stonelee"
+        const ratlog=new Decimal(0.0791812460476);
+        let Point=new Decimal("0");
         let Ptspeed=new Decimal("0");
         let GpointMult=new Decimal("1");
         let pointMult=new Decimal("1");
@@ -199,6 +252,10 @@
         let Tickesplayed=new Decimal("0");
         let Cell=new Decimal("1");
         let Life=new Decimal("0");
+        let PP=new Decimal("0");
+        let Presitges=new Decimal("0");
+        let researchPoints=new Decimal("0");
+        let resMult=new Decimal("1");
         let Upgrades=
         {
             H_2:0,
@@ -226,9 +283,11 @@
         }
         function preupdt()
         {
+
             pointMult=GpointMult;
             if(Upgrades.civ2)molemult=new Decimal(Cell.pow(0.05))
             if(Upgrades.civ3)atommult=new Decimal((Tickesplayed.plus(10)).log10())
+            pointMult=pointMult.mul(PP.pow(1/2).plus(1)).mul(resMult);
             gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pH)).plus(1).mul(0.1).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pH)));
             gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pCorNorO)).plus(1).mul(1.5).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pCorNorO)));
             gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pothers)).plus(1).mul(1.5).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pothers)));
@@ -238,13 +297,16 @@
             Ptspeed=H.mul(gainH).plus(CorNorO.mul(gainCorNorO)).plus(others.mul(gainothers));
             Ptspeed=Ptspeed.mul(pointMult);   
         }
-        function lotsupdt()
+        function afewupdt()
         {
             pt2.style.display="inline";
             pt2.textContent=`You have ${Format(H)} Hydrogens,every Hydrogens+ ${Format(pointMult.mul(gainH))} speed!
             Buy a single Hydrogen|Cost:${Format(priceH)} Points`
             pt3.textContent=`(${Format(Ptspeed)}/s,Click will +25% of point speed)`;
             pt4.textContent=`+${Format(pointMult.plus(Ptspeed.mul(1/4)))} point`
+        }
+        function lotsupdt()
+        {
             pt6.textContent=`You have ${Format(CorNorO)} Carbon or Nitrogen or Oxygon,
             every this+ ${Format(pointMult.mul(gainCorNorO))} speed!(Cost:${Format(price2)})`
             pt7.textContent=`You have ${Format(others)} Other atoms,
@@ -259,11 +321,14 @@
             pt14.textContent=`Your Cell will duplicate until ${Format(Life.pow(1.5).plus(1))} Cell(base at life)`
             pt18.textContent=`Repeatable Expanded Purchase gain(Civ.Countries Lv.${intFormat(Upgrades.civ4)},
             +${Format(Upgrades.civ4.mul(1))}%)|Cost:${Format(epPrice)} Points`
+            pt23.textContent=`You PP gives your a x${Format(PP.pow(1/2).plus(1))} mult to Points produce`
+            pt27.textContent=`You have ${Format(researchPoints)} Research Points.(${Format(Point.plus(1).log10().mul(bigMolecule))}/s)`
         }
         function update()
         {
             preupdt();
-            if(Decimal.cmp(Point,new Decimal(3))>=0)lotsupdt();
+            lotsupdt();
+            if(Decimal.cmp(Point,new Decimal(3))>=0)afewupdt();
             if(Decimal.cmp(H,new Decimal(2))>=0&&Upgrades.H_2==0)
             {
                 pt5.className="upg"
@@ -323,8 +388,9 @@
                     pt17.textContent=`Upgrade:Calender|Current:x${Format((Tickesplayed.plus(10)).log10())}`
                 }
             }
-            if(Decimal.cmp(bigMolecule,7)>=0)
-            {   
+            if(Decimal.cmp(bigMolecule,7)>=0||Decimal.cmp(PP,1)>=0)
+            {   pt19.style.display="inline"
+                pt20.style.display="inline"
                 if(Decimal.cmp(Upgrades.civ4,maxLevels.civ4)<0)
                 {
                     pt18.className="upg";
@@ -334,6 +400,56 @@
                 {
                     pt18.className="upg-completed";
                 }
+            }
+            if(Decimal.cmp(Point,1e12)==-1)
+            {
+                pt20.textContent=`You have ${Format(PP)} Presitge Points(Cannot presitge:Points must>=1e12)`
+                pt20.style.color="crimson";
+                pt21.value=Point.plus(1).log10().toNumber()
+                pt22.textContent=`Progress to presitge(${Format(Point.plus(1).log10().mul(100/12))}%)`
+            }
+            else
+            {
+                pt20.textContent=`You have ${Format(PP)} Presitge Points(+${(Format(Point.mul(1e-12).pow(0.05)))} With Presitge)`;
+                pt20.style.color="cyan"
+                pt21.value=12;
+                pt22.textContent=`Can presitge now!`
+            }
+            if(Decimal.cmp(Presitges,3)==-1)
+            {
+                pt25.textContent=`You have Prestige ${Format(Presitges)} times.You need 3 Times of presitge to unlock Max All.`;
+                pt24.style.display="none";
+                pt26.style.display="none";
+            }
+            else if(Decimal.cmp(Presitges,5)==-1)
+            {
+                pt25.textContent=`You have Prestige ${Format(Presitges)} times.You need 5 Times of presitge to unlock Max All.`;
+                pt24.style.display="inline";
+                pt26.style.display="none";
+            }
+            else
+            {
+                pt25.textContent=`You have Prestige ${Format(Presitges)} times.You unlocked all prestige milestone.`;
+                pt24.style.display="inline";
+                pt26.style.display="inline";
+            }
+            if(Decimal.cmp(researchPoints,1000)==-1)
+            {
+                pt28.textContent="Your Research Level is Copper.Level up:1,000.00"
+                pt28.style.color="brown";
+                resMult=1
+            }
+            else if(Decimal.cmp(researchPoints,1e6)==-1)
+            {
+                pt28.textContent="Your Research Level is Silver(x3).Level up:1,000,000"
+                pt28.style.color="silver";
+                resMult=3
+            }
+            else
+            {
+                pt28.textContent="Your Research Level is Gold(x15)."
+                pt28.style.color="gold";
+                resMult=15
             }
         }
         function addAtom_h()
@@ -383,8 +499,9 @@
             others=others.plus(gainsmall.mul(1/100).mul(smallMolecule).mul(inSec).mul(atommult));
             smallMolecule=smallMolecule.plus(gainbig.mul(bigMolecule).mul(inSec).mul(molemult))
             Life=Life.plus(bigMolecule.mul(inSec))
-            if(Decimal.cmp(Cell,Life.pow(1.5).plus(1))==-1)Cell=Cell.mul(1.001).pow(timespeed);
+            Cell=Decimal.min(Cell.mul(new Decimal(1.001).pow(timespeed)),Life.pow(1.5).plus(1));
             Tickesplayed=Tickesplayed.plus(1);
+            researchPoints=researchPoints.plus(Point.plus(1).log10().mul(inSec).mul(bigMolecule))
         }
         function buyH_2()
         {
@@ -496,13 +613,129 @@
             }
             return num
         }
+        function doPrestige()
+        {
+            if(Decimal.cmp(Point,1e12)==-1)
+            {
+                alert("You must have more than 1e12 Points.")
+                return;
+            }
+            if(!confirm("You're presitge.That will reset you game(Have reward).Really?"))return;
+            PP=PP.add(Point.mul(1e-12).pow(0.05))
+            Presitges=Presitges.plus(1);
+            Point=new Decimal("0");
+            Ptspeed=new Decimal("0");
+            GpointMult=new Decimal("1");
+            pointMult=new Decimal("1");
+            atommult=new Decimal("1");
+            molemult=new Decimal("1");
+            Hmult=new Decimal("1");
+            mult2=new Decimal("1");
+            mult3=new Decimal("1");
+            H=new Decimal("0");
+            CorNorO=new Decimal("0");
+            others=new Decimal("0");
+            smallMolecule=new Decimal("0");
+            bigMolecule=new Decimal("0");
+            pH=new Decimal("0");
+            pCorNorO=new Decimal("0");
+            pothers=new Decimal("0");
+            psmallMolecule=new Decimal("0");
+            pbigMolecule=new Decimal("0");
+            gainH=new Decimal("0.1");
+            gainCorNorO=new Decimal("1.5");
+            gainothers=new Decimal("11.8");
+            gainsmall=new Decimal("0");
+            gainbig=new Decimal("0");
+            priceH=new Decimal("4");
+            price2=new Decimal("150");
+            price3=new Decimal("1234.56");
+            price4=new Decimal("1e4");
+            price5=new Decimal("1e5");
+            bPurchaseGainPrice=new Decimal("2000");
+            epPrice=new Decimal("4e7");
+            Tickesplayed=new Decimal("0");
+            Cell=new Decimal("1");
+            Life=new Decimal("0");
+            researchPoints=new Decimal("0");
+            Upgrades={
+                H_2:0,
+                bPurchaseLevel:new Decimal(0),
+                civ1:0,
+                civ2:0,
+                civ3:0,
+                civ4:new Decimal(0)
+            };
+            update();
+        }
+        //This part is by gen-ai because I am lazy haha!
+        function maxBuild(basePrice, owned) 
+        {
+            const ratio = new Decimal(1.2);
+            const rSub1 = new Decimal(0.2);
+            const first = basePrice.mul(ratio.pow(owned));
+            if(Decimal.cmp(Point, first) < 0)
+            {
+                return {count: new Decimal(0), cost: new Decimal(0)};
+            }
+            const inner = Point.mul(rSub1).div(first).plus(1);
+            const count = inner.log10().div(ratio.log10()).floor();
+            const cost = first.mul(ratio.pow(count).sub(1)).div(rSub1);
+            return {count, cost};
+        }
+        function maxAll()
+        {
+            const ratio = new Decimal(1.2);
+            let res;
+            res = maxBuild(new Decimal(4), pH);
+            if(Decimal.cmp(res.count, 0) > 0)
+            {
+                H = H.plus(res.count);
+                pH = pH.plus(res.count);
+                Point = Point.minus(res.cost);
+                priceH = new Decimal(4).mul(ratio.pow(pH));
+            }
+            res = maxBuild(new Decimal(150), pCorNorO);
+            if(Decimal.cmp(res.count, 0) > 0)
+            {
+                CorNorO = CorNorO.plus(res.count);
+                pCorNorO = pCorNorO.plus(res.count);
+                Point = Point.minus(res.cost);
+                price2 = new Decimal(150).mul(ratio.pow(pCorNorO));
+            }
+            res = maxBuild(new Decimal(1234.56), pothers);
+            if(Decimal.cmp(res.count, 0) > 0)
+            {
+                others = others.plus(res.count);
+                pothers = pothers.plus(res.count);
+                Point = Point.minus(res.cost);
+                price3 = new Decimal(1234.56).mul(ratio.pow(pothers));
+            }
+            res = maxBuild(new Decimal(1e4), psmallMolecule);
+            if(Decimal.cmp(res.count, 0) > 0)
+            {
+                smallMolecule = smallMolecule.plus(res.count);
+                psmallMolecule = psmallMolecule.plus(res.count);
+                Point = Point.minus(res.cost);
+                price4 = new Decimal(1e4).mul(ratio.pow(psmallMolecule));
+            }
+            res = maxBuild(new Decimal(1e5), pbigMolecule);
+            if(Decimal.cmp(res.count, 0) > 0)
+            {
+                bigMolecule = bigMolecule.plus(res.count);
+                pbigMolecule = pbigMolecule.plus(res.count);
+                Point = Point.minus(res.cost);
+                price5 = new Decimal(1e5).mul(ratio.pow(pbigMolecule));
+            }
+            update();
+        }//Part ended...
         function Export()
         {
             return{
                 Point:Point.toString(),
                 Ptspeed:Ptspeed.toString(),
                 pointMult:pointMult.toString(),
-                GpointMult:pointMult.toString(),
+                GpointMult:GpointMult.toString(),
                 atommult:atommult.toString(),
                 molemult:molemult.toString(),
                 Hmult:Hmult.toString(),
@@ -532,6 +765,11 @@
                 Life:Life.toString(),
                 Tickesplayed:Tickesplayed.toString(),
                 bPurchaseGainPrice:bPurchaseGainPrice.toString(),
+                epPrice:epPrice.toString(),
+                PP:PP.toString(),
+                Presitges:Presitges.toString(),
+                researchPoints:researchPoints.toString(),
+                resMult:resMult.toString(),
                 Upgrades:
                 {
                     H_2:Upgrades.H_2,
@@ -540,7 +778,7 @@
                     civ2:Upgrades.civ2,
                     civ3:Upgrades.civ3,
                     civ4:Upgrades.civ4.toString()
-                }
+                },
             };
         }
         function Import(saveData)
@@ -552,7 +790,7 @@
                 Point=new Decimal(saveData.Point || "0");
                 Ptspeed=new Decimal(saveData.Ptspeed || "0");
                 GpointMult=new Decimal(saveData.GpointMult || "1");
-                pointMult=new Decimal(saveData.pointMult || "1");
+                pointMult=new Decimal(saveData.GpointMult || "1");
                 atommult=new Decimal(saveData.atommult || "1");
                 molemult=new Decimal(saveData.molemult || "1");
                 mult2=new Decimal(saveData.mult2 || "1");
@@ -581,7 +819,11 @@
                 Life=new Decimal(saveData.Life || "0");
                 Tickesplayed=new Decimal(saveData.Tickesplayed || "0");
                 bPurchaseGainPrice=new Decimal(saveData.bPurchaseGainPrice || "2000");
-                epPrice=new Decimal(saveData.bPurchaseGainPrice || "4e7");
+                epPrice=new Decimal(saveData.epPrice || "4e7");
+                PP=new Decimal(saveData.PP || "0");
+                Presitges=new Decimal(saveData.Presitges || "0");
+                researchPoints=new Decimal(saveData.researchPoints || "0");
+                resMult=new Decimal(saveData.resMult || "0");
                 Upgrades.H_2=saveData.Upgrades?.H_2 || 0;
                 Upgrades.bPurchaseLevel=new Decimal(saveData.Upgrades?.bPurchaseLevel || "0");
                 Upgrades.civ1=saveData.Upgrades?.civ1 || 0;
@@ -601,9 +843,9 @@
             try
             {
                 const saveData=localStorage.getItem(SAVE_KEY);
-                if(saveData) Import(saveData);
-                update(); 
-                gameStart();
+                if(saveData)Import(saveData);
+                update();
+                pt1.style.display="inline";
                 console.log("Save Loaded");
             }
             catch(e)
