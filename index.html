@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Collapscension</title>
+    <link rel="icon" type="image/png" href="logo_tiny.png">
     <!--Including Poppins...-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -119,7 +120,7 @@
         .achievement-list
         {
             display:grid;
-            grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
             gap: 0px;
         }
         .achievement-card
@@ -164,7 +165,7 @@
         <br><button id="9" class="build" onclick="addm()"></button>
         <br><button id="10" class="build" onclick="addM()"></button>
         <br><button id="24" class="build" style="width:100px;height:25px;"onclick="maxAll()">Max All</button>
-        <p id="3">Current Version:V0.6.1β(1.5 month old)</p>
+        <p id="3">Current Version:V0.7α-0430.1</p>
         <div style="background-color:navy;width:210px;">
             <button onclick="
                 let saveData=prompt('Import:');
@@ -195,7 +196,7 @@
         <br><button class="upg" onclick="buyciv4()"id="18">
             Repeatable Expanded Purchase gain(Also Called Civ.Countries,Lv.0)|Cost:40,000,000 Points</button>
         <br>
-        <div id="26" style="background-color:limegreen;">
+        <div id="26" style="background-color:darkgreen;">
             <h3 class="glowtext" id="27">You have 0.00 Research Points(0.00/s)</h3>
             <h3 id="28" style="color:brown;">Your Research Level is Copper.Level up:1000.00</h3>
             <br><button class="upg" onclick="buyre1()"id="32">
@@ -204,6 +205,26 @@
                 Language:gain x5 more small molecule.Cost:1.00e14 Points.</button>
             <br><button class="upg" onclick="buyre3()"id="34">
                 Steam:Gain x100 more Research Points(and x10 atom gain).Cost:9.29e29</button>
+            <br><button class="upg" onclick="buyre4()"id="44">
+                Electrical:This produces electric energy,boosts Research Points.Cost:3.33e33</button>
+            <br><button id="47" style="display:none;" onclick="robot=true;gameAchievements[13].requirement=true;">
+                Unlock A.I.It runs nuclear power plants,auto-computes,and auto-clicks.</button>
+        </div>
+        <br><br>
+        <button id="45" class="build" onclick="moreEnergy()">Nuclear power generation(Click to generate massive energy)</button>
+        <button id="46" class="build" onclick="time2Compute()">Compute!</button>
+        <br><br>
+        <div id="49" style="display:none;">
+            <h3>Cosmic</h3>
+            Coming Soon! 
+        </div>
+        <br><br>
+        <div id="38" style="display:none;">
+            <button id="39" class="upg" style="display:inline;" onclick="buyAutoH()">Automaticlly Buy Hydrogens|Cost:1e30 Points</button>
+            <button id="40" class="upg" style="display:inline;" onclick="buyAuto2()">Automaticlly Buy Carbon or Nitrogen or Oxygen|Cost:1e40 Points</button>
+            <button id="41" class="upg" style="display:inline;" onclick="buyAuto3()">Automaticlly Buy Other Atoms|Cost:1e50 Points</button>
+            <button id="42" class="upg" style="display:inline;" onclick="buyAuto4()">Automaticlly Buy small molecule|Cost:1e60 Points</button>
+            <button id="43" class="upg" style="display:inline;" onclick="buyAuto5()">Automaticlly Buy big molecule|Cost:1e70 Points</button>
         </div>
     </div>
     <div id="p19" class="tab-content" style="background-color:url('logo.png'),rgba(0,106,121,0.4);">
@@ -225,10 +246,18 @@
             Double Boost:Gain 2.5x of Point and PP.Cost:15PP</button>
         <br><button class="upg" onclick="buyPPGain()"id="36">
             Multi-Dimensions PP Gain:PP Also gains atom and small molecule.Cost:30PP</button>
+        <br><button class="upg" onclick="moreRobots()"id="48">
+            AI is stronger.Cost:3000PP</button>
         <div><!--achievement is by gen-ai-->
             <h3 class="achievement-frame__title" id="35">Achievements</h3>
             <div class="achievement-list" id="30"></div>
         </div>
+    </div>
+    <div style="text-align:center;background-color:grey;">
+        Do not attempt to re-enact or imitate any actions in the game that may be illegal in your jurisdiction.
+        <br>
+        <a href="https://github.com/ruililcu/Collapscension">Source code|</a>
+        <a href="https://github.com/ruililcu/Collapscension/wiki">Collapscension wiki</a>
     </div>
     <script>
         const pt1=document.getElementById(1);
@@ -268,6 +297,18 @@
         const pt35=document.getElementById(35);
         const pt36=document.getElementById(36);
         const pt37=document.getElementById(37);
+        const pt38=document.getElementById(38);
+        const pt39=document.getElementById(39);
+        const pt40=document.getElementById(40);
+        const pt41=document.getElementById(41);
+        const pt42=document.getElementById(42);
+        const pt43=document.getElementById(43);
+        const pt44=document.getElementById(44);
+        const pt45=document.getElementById(45);
+        const pt46=document.getElementById(46);
+        const pt47=document.getElementById(47);
+        const pt48=document.getElementById(48);
+        const pt49=document.getElementById(48);
         const realSec=1/60;
         const SAVE_KEY="Collapscension/Stonelee"
         const ratlog=new Decimal(0.0791812460476);
@@ -311,6 +352,10 @@
         let resMult=new Decimal("1");
         let resGainMult=new Decimal("1");
         let PPMult=new Decimal("1");
+        let energy1=new Decimal("1")
+        let computingPower=new Decimal("1")
+        let extraMult=new Decimal("1");
+        let robot=false
         let Upgrades=
         {
             H_2:0,
@@ -322,9 +367,16 @@
             re1:new Decimal(0),
             re2:0,
             re3:0,
+            re4:0,
             pu1:0,
             pu2:0,
-            pu3:0
+            pu3:0,
+            pu4:0,
+            autoh:0,
+            auto2:0,
+            auto3:0,
+            auto4:0,
+            auto5:0
         }
         let maxLevels=
         {
@@ -336,10 +388,17 @@
             civ4:new Decimal(5),
             re1:new Decimal(9),
             re2:1,
-            re3:1, 
+            re3:1,
+            re4:1,
             pu1:1,
             pu2:1,
-            pu3:1
+            pu3:1,
+            pu4:1,
+            autoh:2,
+            auto2:2,
+            auto3:2,
+            auto4:2,
+            auto5:2
         }
         const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
         function gameStart()//It is click func:D
@@ -350,19 +409,27 @@
         }
         let gameAchievements=
         [
-            {name:"First Layer",desc:"Req:First Prestige",requirement:false},
-            {name:"Max,Max",desc:"Req:Prestige 3 Times", requirement:false},
-            {name:"Prestige it again!",desc:"Req:have 15PP", requirement:false},
-            {name:"Million of it",desc:"Req:Your Research Level is Gold",requirement:false},
-            {name:"You have an Octopus",desc:"Req:Have 1e27 Points",requirement:false},
-            {name:"NOT on that platform?!",desc:"Req:Upgrade the 'Steam' research",requirement:false},
-            {name:"100 PP is a lot",desc:"Req:have 100 PP(Endgame of V0.6.1)",requirement:false}
+            {name:"1.First Layer",desc:"Req:First Prestige",requirement:false},
+            {name:"2.Max,Max",desc:"Req:Prestige 3 Times", requirement:false},
+            {name:"3.Prestige it again!",desc:"Req:have 15PP", requirement:false},
+            {name:"4.Million of it",desc:"Req:Your Research Level is Gold",requirement:false},
+            {name:"5.You have an Octopus",desc:"Req:Have 1e27 Points",requirement:false},
+            {name:"6.NOT on that platform?!",desc:"Req:Upgrade the 'Steam' research",requirement:false},
+            {name:"7.100 PP is a lot",desc:"Req:have 100 PP",requirement:false},
+            {name:"8.Quality of Life",desc:"Req:Upgrade H-autobuyer to Buy Max/s",requirement:false},
+            {name:"9.You can idle now,but spend a long time",desc:"Req:all basic autobuyers Buy 1/s at least",requirement:false},
+            {name:"10.You can idle now,but it isn't too fast",desc:"Req:all basic autobuyers Buy Max/s at least",requirement:false},
+            {name:"11.a lot of energy",desc:"Req:Upgrade Electrical",requirement:false},
+            {name:"12.is that a technological explosion?!",desc:"Req:x1 billion energy mult",requirement:false},
+            {name:"13.Get ready for the robot era",desc:"Req:start to compute",requirement:false},
+            {name:"14.The robot era is coming",desc:"Req:Unlock A.I.",requirement:false}
         ];
         function preupdt()
         {
             pointMult=GpointMult;
             atommult=new Decimal(1);
             molemult=new Decimal(1);
+            resGainMult=new Decimal(1);
             if(Upgrades.civ2)molemult=molemult.mul(Cell.pow(0.05))
             if(Upgrades.civ3)atommult=atommult.mul((Tickesplayed.plus(10)).log10())
             if(Upgrades.pu2)
@@ -381,12 +448,23 @@
             pointMult=pointMult.mul(achMult);
             atommult=atommult.mul(achMult);
             molemult=molemult.mul(achMult);
-            pointMult=pointMult.mul(PPGain).mul(resMult).mul(psmallMolecule.pow(Upgrades.re1.mul(0.4).plus(0)));
+            pointMult=pointMult.mul(PPGain).mul(resMult).mul(psmallMolecule.pow(Upgrades.re1.mul(0.4)))
+            .mul(computingPower);
             if(Upgrades.pu3)
             {
                 atommult=atommult.mul(PPGain);
                 molemult=molemult.mul(PPGain);
             }
+            let robotAmount=computingPower.plus(1).log10()
+            if(Upgrades.pu4)robotAmount=robotAmount.mul(PP.plus(1));
+            if(robot)
+            {
+                Point=Point.plus(robotAmount).plus(1);
+                extraMult=robotAmount.mul(1/4).plus(1)
+                energy1=energy1.add(Point.pow(0.2).mul(robotAmount))
+                computingPower=computingPower.add(researchPoints.log10().pow(2).mul(energy1.pow(0.2)).mul(robotAmount))
+            }
+            resGainMult=resGainMult.mul(energy1.plus(1))
             gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pH)).plus(1).mul(0.1).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pH)));
             gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pCorNorO)).plus(1).mul(1.5).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pCorNorO)));
             gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pothers)).plus(1).mul(23.8).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pothers)));
@@ -401,7 +479,7 @@
             pt2.style.display="inline";
             pt2.textContent=`You have ${Format(H)} Hydrogens,every Hydrogens+ ${Format(pointMult.mul(gainH))} speed!
             Buy a single Hydrogen|Cost:${Format(priceH)} Points`
-            pt3.textContent=`(${Format(Ptspeed)}/s,Click will +25% of point speed)`;
+            pt3.textContent=`(${Format(Ptspeed.mul(extraMult))}/s,Click will +25% of base point speed)`;
             pt4.textContent=`+${Format(pointMult.plus(Ptspeed.mul(1/4)))} point`
         }
         function lotsupdt()
@@ -423,9 +501,10 @@
             pt23.textContent=`You PP gives your a x${Format(PP.pow(1/2).plus(1))} mult to Points produce`
             pt27.textContent=`You have ${Format(researchPoints)} Research Points.(${Format(Point.plus(1).log10().mul(bigMolecule).mul(resGainMult))}/s)`
             pt32.innerHTML=`Science and Mathmatics Lv.${intFormat(Upgrades.re1)}:gain more Point base by You Purchased small molecule
-            <br>Cost:${Format(new Decimal(42).pow(Upgrades.re1).mul(1e13))} Points.|Current:x${Format(psmallMolecule.pow(Upgrades.re1.mul(0.4).plus(0)))}`
+            <br>Cost:${Format(new Decimal(42).pow(Upgrades.re1).mul(1e13))} Points.|Current:x${Format(psmallMolecule.pow(Upgrades.re1.mul(0.4)).plus(1))}`
             pt35.innerHTML=`Achievements|give x${Format(getAchievementMult())} for point,atom and small molecule<br>
             convert to ~x${Format(getAchievementMult().pow(3))} for single point`
+            pt46.textContent=`Compute!  Computing power:x${Format(computingPower)} point`
         }
         function update()
         {
@@ -582,7 +661,7 @@
                     pt28.style.webkitBackgroundClip="text";
                     pt28.style.webkitTextFillColor="transparent";
                     pt28.style.fontWeight="bold"
-                    pt28.textContent="Your Research Level is Copper.Level up:1,000.00"
+                    pt28.textContent="Your Research Level is Bronze.Level up:1,000.00"
                     resMult=1
                 }
                 else if(Decimal.cmp(researchPoints,1e6)==-1)
@@ -604,14 +683,62 @@
                     resMult=15
                     gameAchievements[3].requirement=true;
                 }
-                else
+                else if(Decimal.cmp(researchPoints,1e12)==-1||Decimal.cmp(PP,100)==-1)
                 {
-                    pt28.textContent="Your Research Level is Platinum(x50)."
+                    pt28.textContent="Your Research Level is Platinum(x50).Level up:1.00e12 and 100PP"
                     pt28.style.background="linear-gradient(to right,lightblue,cyan)";
                     pt28.style.webkitBackgroundClip="text";
                     pt28.style.webkitTextFillColor="transparent";
                     pt28.style.fontWeight="bold"
                     resMult=50
+                }
+                else if(Decimal.cmp(researchPoints,1e17)==-1)
+                {
+                    pt28.textContent="Your Research Level is Uranium(x500).Level up:1.00e17"
+                    pt28.style.background="linear-gradient(to right,grey,green)";
+                    pt28.style.webkitBackgroundClip="text";
+                    pt28.style.webkitTextFillColor="transparent";
+                    pt28.style.fontWeight="bold"
+                    pt45.style.display="inline";
+                    resMult=500
+                }
+                else if(Decimal.cmp(researchPoints,1e20)==-1)
+                {
+                    pt28.textContent="Your Research Level is silicon(x65,536).Level up:1.00e20"
+                    pt28.style.background="linear-gradient(to right,limegreen,skyblue)";
+                    pt28.style.webkitBackgroundClip="text";
+                    pt28.style.webkitTextFillColor="transparent";
+                    pt28.style.fontWeight="bold"
+                    pt45.style.display="inline";
+                    pt46.style.display="inline";
+                    resMult=65536
+                }
+                else if(Decimal.cmp(researchPoints,1e26)==-1||Decimal.cmp(PP,4096)==-1)
+                {
+                    pt28.textContent="Your Research Level is AI(x1e9).Level up:1.00e26 and 4,096PP."
+                    pt28.style.background="linear-gradient(to right,skyblue,purple)";
+                    pt28.style.webkitBackgroundClip="text";
+                    pt28.style.webkitTextFillColor="transparent";
+                    pt28.style.fontWeight="bold"
+                    pt45.style.display="inline";
+                    pt46.style.display="inline";
+                    pt47.style.display="inline";
+                    pt48.style.display="inline";
+                    resMult=1e9
+                }
+                else
+                {
+                    pt28.textContent=`Your Research Level is Cosmic(x${Format(researchPoints.pow(0.5))}).`
+                    pt28.style.background="linear-gradient(to right,purple,orange)";
+                    pt28.style.webkitBackgroundClip="text";
+                    pt28.style.webkitTextFillColor="transparent";
+                    pt28.style.fontWeight="bold"
+                    pt45.style.display="inline";
+                    pt46.style.display="inline";
+                    pt47.style.display="inline";
+                    pt48.style.display="inline";
+                    pt49.style.display="inline";
+                    resMult=researchPoints.pow(0.5);
                 }
             }
             if(Decimal.cmp(Upgrades.pu1,maxLevels.pu1)<0)
@@ -678,17 +805,67 @@
             }
             if(Decimal.cmp(PP,100)>=0)
             {
-                if(!gameAchievements[6].requirement)
-                {
-                    setTimeout(()=>
-                    {
-                        if(confirm("🎉Congratulations!You've reached the end of V0.6.1!\n\n\
-                        Thank you for playing!\nPress 'Yes' to restart your journey."))
-                            RESET();
-                    }, 2000);
-                }
                 gameAchievements[6].requirement=true;
+                pt38.style.display="inline"
+                if(Upgrades.autoh==0)pt39.textContent="Automaticlly Buy Hydrogens|Cost:1e30 Points";
+                if(Upgrades.autoh==1)pt39.textContent="Automaticlly Buy Hydrogens(Buy 1/s)|Cost:100PP";
+                if(Upgrades.autoh==2)
+                {
+                    pt39.textContent="Automaticlly Buy Hydrogens(Buy Max/s)|Next Level Coming V1.0!";
+                    pt39.className="upg-completed-p";
+                    gameAchievements[7].requirement=true;
+                }else pt39.className="upg";
+                if(Upgrades.auto2==0)pt40.textContent="Automaticlly Buy Carbon or Nitrogen or Oxygen|Cost:1e40 Points";
+                if(Upgrades.auto2==1)pt40.textContent="Automaticlly Buy Carbon or Nitrogen or Oxygen(Buy 1/s)|Cost:1000PP";
+                if(Upgrades.auto2==2)
+                {
+                    pt40.textContent="Automaticlly Buy Carbon or Nitrogen or Oxygen(Buy Max/s)|Next Level Coming V1.0!";
+                    pt40.className="upg-completed-p";
+                }else pt40.className="upg";
+                if(Upgrades.auto3==0)pt41.textContent="Automaticlly Buy other atoms|Cost:1e50 Points";
+                if(Upgrades.auto3==1)pt41.textContent="Automaticlly Buy other atoms(Buy 1/s)|Cost:10000PP";
+                if(Upgrades.auto3==2)
+                {
+                    pt41.textContent="Automaticlly Buy other atoms(Buy Max/s)|Next Level Coming V1.0!";
+                    pt41.className="upg-completed-p";
+                }else pt41.className="upg";
+                if(Upgrades.auto4==0)pt42.textContent="Automaticlly Buy small molecule|Cost:1e60 Points";
+                if(Upgrades.auto4==1)pt42.textContent="Automaticlly Buy small molecule(Buy 1/s)|Cost:100,000PP";
+                if(Upgrades.auto4==2)
+                {
+                    pt42.textContent="Automaticlly Buy small molecule(Buy Max/s)|Next Level Coming V1.0!";
+                    pt42.className="upg-completed-p";
+                }else pt42.className="upg";
+                if(Upgrades.auto5==0)pt43.textContent="Automatically Buy big molecule|Cost:1e70 Points";
+                if(Upgrades.auto5==1)pt43.textContent="Automatically Buy big molecule(Buy 1/s)|Cost:1,000,000PP";
+                if(Upgrades.auto5==2)
+                {
+                    pt43.textContent="Automatically Buy big molecule(Buy Max/s)|Next Level Coming V1.0!";
+                    pt43.className="upg-completed-p";
+                }else pt43.className="upg";
             }
+            let a=Math.min(Upgrades.autoh,Upgrades.auto2,Upgrades.auto3,Upgrades.auto4,Upgrades.auto5)
+            if(a>=1)gameAchievements[8].requirement=true;
+            if(a>=2)gameAchievements[9].requirement=true;
+            if(Decimal.cmp(researchPoints,5e7)>=0)
+            {
+                pt44.style.display="inline";
+                if(Upgrades.re3>=maxLevels.re3)
+                {
+                    pt44.className="upg-completed";
+                    pt44.textContent=`electric energy:x${Format(energy1.plus(1))}`
+                    gameAchievements[10].requirement=true;
+                    if(Decimal.cmp(energy1,1e9)>=0)gameAchievements[11].requirement=true;
+                }
+                else pt44.className="upg";
+            }
+            if(robot)pt47.className='upg-completed'
+            if(Decimal.cmp(Upgrades.pu4,maxLevels.pu4)<0)
+            {
+                pt48.className="upg";
+                pt48.style.display="inline"
+            }
+            else pt48.className="upg-completed-p";
         }
         function addAtom_h()
         {
@@ -731,7 +908,7 @@
         function Runtick(timespeed)
         {
             var inSec=timespeed.mul(realSec)
-            Point=Point.plus(Ptspeed.mul(inSec));
+            Point=Point.plus(Ptspeed.mul(inSec).mul(extraMult));
             H=H.plus(gainsmall.mul(smallMolecule).mul(inSec).mul(atommult));
             CorNorO=CorNorO.plus(gainsmall.mul(1/10).mul(smallMolecule).mul(inSec).mul(atommult));
             others=others.plus(gainsmall.mul(1/100).mul(smallMolecule).mul(inSec).mul(atommult));
@@ -740,6 +917,7 @@
             Cell=Decimal.min(Cell.mul(new Decimal(1.001).pow(timespeed)),Life.pow(1.5).plus(1));
             Tickesplayed=Tickesplayed.plus(timespeed);
             researchPoints=researchPoints.plus(Point.plus(1).log10().mul(inSec).mul(bigMolecule).mul(resGainMult))
+            energy1=energy1.plus(researchPoints.plus(1).log10())
         }
         function buyH_2()
         {
@@ -899,6 +1077,8 @@
             Cell=new Decimal("1");
             Life=new Decimal("0");
             researchPoints=new Decimal("0");
+            energy1=new Decimal("0");
+            computingPower=new Decimal("1");
             if(Decimal.cmp(Presitges,400)<0)
             {
                 Upgrades={
@@ -911,6 +1091,12 @@
                 re1:new Decimal(0),
                 re2:0,
                 re3:0,
+                re4:0,
+                autoh:Upgrades.autoh,
+                auto2:Upgrades.auto2,
+                auto3:Upgrades.auto3,
+                auto4:Upgrades.auto4,
+                auto5:Upgrades.auto5,
                 pu1:Upgrades.pu1,
                 pu2:Upgrades.pu2,
                 pu3:Upgrades.pu3,
@@ -940,29 +1126,13 @@
         {
             const ratio = new Decimal(1.2);
             let res;
-            res = maxBuild(new Decimal(4), pH);
+            res = maxBuild(new Decimal(1e5), pbigMolecule);
             if(Decimal.cmp(res.count, 0) > 0)
             {
-                H = H.plus(res.count);
-                pH = pH.plus(res.count);
+                bigMolecule = bigMolecule.plus(res.count);
+                pbigMolecule = pbigMolecule.plus(res.count);
                 Point = Point.minus(res.cost);
-                priceH = new Decimal(4).mul(ratio.pow(pH));
-            }
-            res = maxBuild(new Decimal(150), pCorNorO);
-            if(Decimal.cmp(res.count, 0) > 0)
-            {
-                CorNorO = CorNorO.plus(res.count);
-                pCorNorO = pCorNorO.plus(res.count);
-                Point = Point.minus(res.cost);
-                price2 = new Decimal(150).mul(ratio.pow(pCorNorO));
-            }
-            res = maxBuild(new Decimal(1234.56), pothers);
-            if(Decimal.cmp(res.count, 0) > 0)
-            {
-                others = others.plus(res.count);
-                pothers = pothers.plus(res.count);
-                Point = Point.minus(res.cost);
-                price3 = new Decimal(1234.56).mul(ratio.pow(pothers));
+                price5 = new Decimal(1e5).mul(ratio.pow(pbigMolecule));
             }
             res = maxBuild(new Decimal(1e4), psmallMolecule);
             if(Decimal.cmp(res.count, 0) > 0)
@@ -972,13 +1142,29 @@
                 Point = Point.minus(res.cost);
                 price4 = new Decimal(1e4).mul(ratio.pow(psmallMolecule));
             }
-            res = maxBuild(new Decimal(1e5), pbigMolecule);
+            res = maxBuild(new Decimal(1234.56), pothers);
             if(Decimal.cmp(res.count, 0) > 0)
             {
-                bigMolecule = bigMolecule.plus(res.count);
-                pbigMolecule = pbigMolecule.plus(res.count);
+                others = others.plus(res.count);
+                pothers = pothers.plus(res.count);
                 Point = Point.minus(res.cost);
-                price5 = new Decimal(1e5).mul(ratio.pow(pbigMolecule));
+                price3 = new Decimal(1234.56).mul(ratio.pow(pothers));
+            }
+            res = maxBuild(new Decimal(150), pCorNorO);
+            if(Decimal.cmp(res.count, 0) > 0)
+            {
+                CorNorO = CorNorO.plus(res.count);
+                pCorNorO = pCorNorO.plus(res.count);
+                Point = Point.minus(res.cost);
+                price2 = new Decimal(150).mul(ratio.pow(pCorNorO));
+            }
+            res = maxBuild(new Decimal(4), pH);
+            if(Decimal.cmp(res.count, 0) > 0)
+            {
+                H = H.plus(res.count);
+                pH = pH.plus(res.count);
+                Point = Point.minus(res.cost);
+                priceH = new Decimal(4).mul(ratio.pow(pH));
             }
             update();
         }
@@ -1056,6 +1242,232 @@
                 Upgrades.pu3=1;
             }
         }
+        function buyAutoH()
+        {
+            if(Decimal.cmp(Point,1e30)>=0&&Upgrades.autoh==0)
+            {
+                Point=Point.minus(1e30)
+                Upgrades.autoh=1;
+                update();
+            }
+            else if(Decimal.cmp(PP,100)>=0&&Upgrades.autoh==1)
+            {
+                PP=PP.minus(100)
+                Upgrades.autoh=2;
+                update();
+            }
+        }
+        function buyAuto2()
+        {
+            if(Decimal.cmp(Point,1e40)>=0&&Upgrades.auto2==0)
+            {
+                Point=Point.minus(1e40)
+                Upgrades.auto2=1;
+                update();
+            }
+            else if(Decimal.cmp(PP,1000)>=0&&Upgrades.auto2==1)
+            {
+                PP=PP.minus(1000)
+                Upgrades.auto2=2;
+                update();
+            }
+        }
+        function buyAuto3()
+        {
+            if(Decimal.cmp(Point,1e50)>=0&&Upgrades.auto3==0)
+            {
+                Point=Point.minus(1e50)
+                Upgrades.auto3=1;
+                update();
+            }
+            else if(Decimal.cmp(PP,10000)>=0&&Upgrades.auto3==1)
+            {
+                PP=PP.minus(10000)
+                Upgrades.auto3=2;
+                update();
+            }
+        }
+        function buyAuto4()
+        {
+            if(Decimal.cmp(Point,1e60)>=0&&Upgrades.auto4==0)
+            {
+                Point=Point.minus(1e60)
+                Upgrades.auto4=1;
+                update();
+            }
+            else if(Decimal.cmp(PP,100000)>=0&&Upgrades.auto4==1)
+            {
+                PP=PP.minus(100000)
+                Upgrades.auto4=2;
+                update();
+            }
+        }
+        function buyAuto5()
+        {
+            if(Decimal.cmp(Point,1e70)>=0&&Upgrades.auto5==0)
+            {
+                Point=Point.minus(1e70)
+                Upgrades.auto5=1;
+                update();
+            }
+            else if(Decimal.cmp(PP,1000000)>=0&&Upgrades.auto5==1)
+            {
+                PP=PP.minus(1000000)
+                Upgrades.auto5=2;
+                update();
+            }
+        }
+        function setAuto()
+        {
+            setInterval(()=>{
+                if(Upgrades.auto5==1)
+                {
+                    if(Decimal.cmp(Point, price5)>=0)
+                    {
+                        Point=Point.minus(price5);
+                        bigMolecule=bigMolecule.plus(1);
+                        pbigMolecule=pbigMolecule.plus(1);
+                        price5=price5.mul(1.2);
+                        update(); 
+                    }
+                }
+                else if(Upgrades.auto5==2)
+                {
+                    const ratio=new Decimal(1.2);
+                    const res=maxBuild(new Decimal(1e5),pbigMolecule);
+                    if(Decimal.cmp(res.count,0)>0)
+                    {
+                        bigMolecule=bigMolecule.plus(res.count);
+                        pbigMolecule=pbigMolecule.plus(res.count);
+                        Point=Point.minus(res.cost);
+                        price5=new Decimal(1e5).mul(ratio.pow(pbigMolecule));
+                        update();
+                    }
+                }
+            }, 1000);
+            setInterval(()=>{
+                if(Upgrades.auto4==1)
+                {
+                    if(Decimal.cmp(Point, price4)>=0)
+                    {
+                        Point=Point.minus(price4);
+                        smallMolecule=smallMolecule.plus(1);
+                        psmallMolecule=psmallMolecule.plus(1);
+                        price4=price4.mul(1.2);
+                        update(); 
+                    }
+                }
+                else if(Upgrades.auto4==2)
+                {
+                    const ratio=new Decimal(1.2);
+                    const res=maxBuild(new Decimal(1e4),psmallMolecule);
+                    if(Decimal.cmp(res.count,0)>0)
+                    {
+                        smallMolecule=smallMolecule.plus(res.count);
+                        psmallMolecule=psmallMolecule.plus(res.count);
+                        Point=Point.minus(res.cost);
+                        price4=new Decimal(1e4).mul(ratio.pow(psmallMolecule));
+                        update();
+                    }
+                }
+            }, 1000);
+            setInterval(()=>{
+                if(Upgrades.auto3==1)
+                {
+                    if(Decimal.cmp(Point, price3)>=0)
+                    {
+                        Point=Point.minus(price3);
+                        others=others.plus(1);
+                        pothers=pothers.plus(1);
+                        price3=price3.mul(1.2);
+                        update(); 
+                    }
+                }
+                else if(Upgrades.auto3==2)
+                {
+                    const ratio=new Decimal(1.2);
+                    const res=maxBuild(new Decimal(1234.56),pothers);
+                    if(Decimal.cmp(res.count,0)>0)
+                    {
+                        others=others.plus(res.count);
+                        pothers=pothers.plus(res.count);
+                        Point=Point.minus(res.cost);
+                        price3=new Decimal(1234.56).mul(ratio.pow(pothers));
+                        update();
+                    }
+                }
+            }, 1000);
+            setInterval(()=>{
+                if(Upgrades.auto2==1)
+                {
+                    if(Decimal.cmp(Point, price2)>=0)
+                    {
+                        Point=Point.minus(price2);
+                        H=H.plus(1);
+                        pH=pH.plus(1);
+                        price2=price2.mul(1.2);
+                        update(); 
+                    }
+                }
+                else if(Upgrades.auto2==2)
+                {
+                    const ratio=new Decimal(1.2);
+                    const res=maxBuild(new Decimal(150),pCorNorO);
+                    if(Decimal.cmp(res.count,0)>0)
+                    {
+                        CorNorO=CorNorO.plus(res.count);
+                        pCorNorO=pCorNorO.plus(res.count);
+                        Point=Point.minus(res.cost);
+                        price2=new Decimal(150).mul(ratio.pow(pCorNorO));
+                        update();
+                    }
+                }
+            }, 1000);
+            setInterval(()=>{
+                if(Upgrades.autoh==1)
+                {
+                    if(Decimal.cmp(Point, priceH)>=0)
+                    {
+                        Point=Point.minus(priceH);
+                        H=H.plus(1);
+                        pH=pH.plus(1);
+                        priceH=priceH.mul(1.2);
+                        update(); 
+                    }
+                }
+                else if(Upgrades.autoh==2)
+                {
+                    const ratio=new Decimal(1.2);
+                    const res=maxBuild(new Decimal(4),pH);
+                    if(Decimal.cmp(res.count,0)>0)
+                    {
+                        H=H.plus(res.count);
+                        pH=pH.plus(res.count);
+                        Point=Point.minus(res.cost);
+                        priceH=new Decimal(4).mul(ratio.pow(pH));
+                        update();
+                    }
+                }
+            }, 1000);
+        }
+        function moreEnergy()
+        {
+            energy1=energy1.add(Point.pow(0.2))
+        }
+        function time2Compute()
+        {
+            computingPower=computingPower.add(researchPoints.log10().pow(2).mul(energy1.pow(0.2)))
+            gameAchievements[12].requirement=true;
+        }
+        function moreRobots()
+        {
+            if(Decimal.cmp(PP,3000)>=0)
+            {
+                PP=PP.minus(3000);
+                update();
+                Upgrades.pu4=1;
+            }
+        }
         function Export()
         {
             return{
@@ -1099,6 +1511,9 @@
                 resMult:resMult.toString(),
                 timenow:Date.now(),
                 PPMult:PPMult,
+                energy1:energy1,
+                computingPower:computingPower,
+                robot:robot,
                 Upgrades:
                 {
                     H_2:Upgrades.H_2,
@@ -1110,9 +1525,16 @@
                     re1:Upgrades.re1.toString(),
                     re2:Upgrades.re2,
                     re3:Upgrades.re3,
+                    re4:Upgrades.re4,
                     pu1:Upgrades.pu1,
                     pu2:Upgrades.pu2,
-                    pu2:Upgrades.pu3
+                    pu3:Upgrades.pu3,
+                    pu4:Upgrades.pu4,
+                    autoh:Upgrades.autoh,
+                    auto2:Upgrades.auto2,
+                    auto3:Upgrades.auto3,
+                    auto4:Upgrades.auto4,
+                    auto5:Upgrades.auto5
                 },
                 achievements:gameAchievements.map(ach=>ach.requirement)
             };
@@ -1161,6 +1583,9 @@
                 researchPoints=new Decimal(saveData.researchPoints || "0");
                 resMult=new Decimal(saveData.resMult || "0");
                 PPMult=new Decimal(saveData.PPMult || "0");
+                energy1=new Decimal(saveData.energy1 || "0");
+                computingPower=new Decimal(saveData.computingPower || "0");
+                robot=saveData?.robot || false;
                 Upgrades.H_2=saveData.Upgrades?.H_2 || 0;
                 Upgrades.bPurchaseLevel=new Decimal(saveData.Upgrades?.bPurchaseLevel || "0");
                 Upgrades.civ1=saveData.Upgrades?.civ1 || 0;
@@ -1170,9 +1595,16 @@
                 Upgrades.re1=new Decimal(saveData.Upgrades?.re1 || "0");
                 Upgrades.re2=saveData.Upgrades?.re2 || 0;
                 Upgrades.re3=saveData.Upgrades?.re3 || 0;
+                Upgrades.re4=saveData.Upgrades?.re4 || 0;
                 Upgrades.pu1=saveData.Upgrades?.pu1 || 0;
                 Upgrades.pu2=saveData.Upgrades?.pu2 || 0;
                 Upgrades.pu3=saveData.Upgrades?.pu3 || 0;
+                Upgrades.pu4=saveData.Upgrades?.pu4 || 0;
+                Upgrades.autoh=saveData.Upgrades?.autoh || 0;
+                Upgrades.auto2=saveData.Upgrades?.auto2 || 0;
+                Upgrades.auto3=saveData.Upgrades?.auto3 || 0;
+                Upgrades.auto4=saveData.Upgrades?.auto4 || 0;
+                Upgrades.auto5=saveData.Upgrades?.auto5 || 0;
                 let oldOffline=saveData?.timenow || 0;
                 saveData.achievements = saveData.achievements || [];
                 console.log("Save Imported");
@@ -1234,6 +1666,7 @@
             setInterval(()=>{localStorage.setItem("Collapscension/Stonelee",JSON.stringify(Export()))},15000);
             setInterval(()=>{hue+=0.2;hue%=360;pt37.style.color=`hsl(${hue},75%,75%)`;},realSec);//Rainbow!
             loading();
+            setAuto();
             mainLoop();
         }
         run();//Game start from there not from gameStart()
