@@ -31,10 +31,10 @@ Consume computing power to expand total explored star systems `starsystems`. Eve
 ### 5. Dyson Sphere (Ultimate Stellar Building of This Version)
 - Fixed Constant Cost: `1.00e90 Points`, price never inflates or changes
 - One-Click Max Buy Function: Automatically calculate affordable quantity based on current resources & empty star slots, hard capped by total `starsystems` limit
-- Permanent Buff: Each Dyson Sphere grants a permanent `×1.00e20` global energy multiplier, completely break the civilization production ceiling.
+- Permanent Buff: Dyson Sphere mult Energy x1e20+
 
 ## High-Precision Big Number Backend System
-Unified decimal.js chain operation standards for all resources, compute power, building counts and star system caps:
+Unified be.js chain operation standards for all resources, compute power, building counts and star system caps:
 - Utility Functions: `pad()` zero-padding formatter, `formatDuration()` standardized millisecond time display
 - Save Export Function `Export()`: Serialize all ultra-large numerical values, reserve complete extension interface for save import
 - Full scientific notation rendering, fully support values up to 1e90 and above, eliminate native JavaScript Number precision loss completely.
