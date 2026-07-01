@@ -5,7 +5,7 @@
 A single-file offline HTML idle incremental game, current build **V0.7 Beta High-Tech Update**.
 Contains over 1700 lines of source code with a total file size of ~70KB. Built on decimal.js full-stack high-precision big number system to support astronomical values without precision loss.
 
-Development workflow: I independently designed & coded the entire low-level framework, numerical rules, save system and shared utility functions. Repetitive logic such as max-buy functions for nuclear plants, AI compute clusters and Dyson Spheres are generated with AI assistance. The overall architecture is fully human-controlled, so this project is NOT pure Vibe Coding, easy for long-term iteration and maintenance.
+Development workflow: I independently designed & coded the entire low-level framework, numerical rules, save system and shared utility functions. Repetitive logic such as max-buy functions for nuclear plants, AI compute clusters and Dyson Spheres are generated with AI assistance. The overall architecture is fully human-controlled, so this project is NOT pure Vibe Coding, but NOT easy for long-term iteration and maintenance.
 
 ## Complete High-Tech Progression Chain (V0.7 Beta): Power → Nuclear Plant → Information Tech → AI Compute → Star Exploration → Dyson Sphere
 A closed-loop civilization tech tree. Power and computing power are permanent buffs instead of consumable resources, unlocking step-by-step to reach the ultimate stellar engineering of Type II Civilization.
