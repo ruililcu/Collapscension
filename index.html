@@ -165,7 +165,7 @@
         <br><button id="9" class="build" onclick="addm()"></button>
         <br><button id="10" class="build" onclick="addM()"></button>
         <br><button id="24" class="build" style="width:100px;height:25px;"onclick="maxAll()">Max All</button>
-        <p id="3">Current Version:V0.7α-0430.1</p>
+        <p id="3">Current Version:V0.7β</p>
         <div style="background-color:navy;width:210px;">
             <button onclick="
                 let saveData=prompt('Import:');
@@ -216,7 +216,11 @@
         <br><br>
         <div id="49" style="display:none;">
             <h3>Cosmic</h3>
-            Coming Soon! 
+            <br><button class="upg" onclick="speedup()"id="51"style="display:inline;">
+                Faster-than-light Travel:unlock star systems explores.Cost:1.00e95</button>
+            <br><button class="build" onclick="dyson()"id="52"style="display:inline;">
+                Dyson Sphere[0/1]:+x1.00 Boost to energy gain.Cost:1.00e90</button>
+            <p id="53">You explored 1 Star System(s)</p>
         </div>
         <br><br>
         <div id="38" style="display:none;">
@@ -240,6 +244,7 @@
             <p id="23">Your PP gives you a mult</p>
         </div>
         <p id="25">You have Prestige 0 times.You need 3 Times of presitge to unlock Max All.</p>
+        <p id="50">You didn't prestige.</p>
         <br><button class="upg" onclick="buyoflp()"id="29"style="display:inline;">
             Offline Progress I:when you were away,get 5% Of your offline progress.Cost:10PP</button>
         <br><button class="upg" onclick="buy2Boosts()"id="31">
@@ -253,62 +258,66 @@
             <div class="achievement-list" id="30"></div>
         </div>
     </div>
-    <div style="text-align:center;background-color:grey;">
-        Do not attempt to re-enact or imitate any actions in the game that may be illegal in your jurisdiction.
+    <div style="text-align:center;background-color:grey;margin:0;">
+        made by StoneLee | Do not attempt to re-enact or imitate any actions in the game that may be illegal in your jurisdiction.
         <br>
-        <a href="https://github.com/ruililcu/Collapscension">Source code|</a>
+        <a href="https://github.com/ruililcu/Collapscension">Source code |</a>
         <a href="https://github.com/ruililcu/Collapscension/wiki">Collapscension wiki</a>
     </div>
     <script>
-        const pt1=document.getElementById(1);
-        const pt2=document.getElementById(2);
-        const pt3=document.getElementById(3);
-        const pt4=document.getElementById(4);
-        const pt5=document.getElementById(5);
-        const pt6=document.getElementById(6);
-        const pt7=document.getElementById(7);
-        const pt8=document.getElementById(8);
-        const pt9=document.getElementById(9);
-        const pt10=document.getElementById(10);
-        const pt11=document.getElementById(11);
-        const pt12=document.getElementById(12);
-        const pt13=document.getElementById(13);
-        const pt14=document.getElementById(14);
-        const pt15=document.getElementById(15);
-        const pt16=document.getElementById(16);
-        const pt17=document.getElementById(17);
-        const pt18=document.getElementById(18);
-        const pt19=document.getElementById(19);
-        const pt20=document.getElementById(20);
-        const pt21=document.getElementById(21);
-        const pt22=document.getElementById(22);
-        const pt23=document.getElementById(23);
-        const pt24=document.getElementById(24);
-        const pt25=document.getElementById(25);
-        const pt26=document.getElementById(26);
-        const pt27=document.getElementById(27);
-        const pt28=document.getElementById(28);
-        const pt29=document.getElementById(29);
-        const pt30=document.getElementById(30);
-        const pt31=document.getElementById(31);
-        const pt32=document.getElementById(32);
-        const pt33=document.getElementById(33);
-        const pt34=document.getElementById(34);
-        const pt35=document.getElementById(35);
-        const pt36=document.getElementById(36);
-        const pt37=document.getElementById(37);
-        const pt38=document.getElementById(38);
-        const pt39=document.getElementById(39);
-        const pt40=document.getElementById(40);
-        const pt41=document.getElementById(41);
-        const pt42=document.getElementById(42);
-        const pt43=document.getElementById(43);
-        const pt44=document.getElementById(44);
-        const pt45=document.getElementById(45);
-        const pt46=document.getElementById(46);
-        const pt47=document.getElementById(47);
-        const pt48=document.getElementById(48);
-        const pt49=document.getElementById(48);
+        const pt1=document.getElementById("1");
+        const pt2=document.getElementById("2");
+        const pt3=document.getElementById("3");
+        const pt4=document.getElementById("4");
+        const pt5=document.getElementById("5");
+        const pt6=document.getElementById("6");
+        const pt7=document.getElementById("7");
+        const pt8=document.getElementById("8");
+        const pt9=document.getElementById("9");
+        const pt10=document.getElementById("10");
+        const pt11=document.getElementById("11");
+        const pt12=document.getElementById("12");
+        const pt13=document.getElementById("13");
+        const pt14=document.getElementById("14");
+        const pt15=document.getElementById("15");
+        const pt16=document.getElementById("16");
+        const pt17=document.getElementById("17");
+        const pt18=document.getElementById("18");
+        const pt19=document.getElementById("19");
+        const pt20=document.getElementById("20");
+        const pt21=document.getElementById("21");
+        const pt22=document.getElementById("22");
+        const pt23=document.getElementById("23");
+        const pt24=document.getElementById("24");
+        const pt25=document.getElementById("25");
+        const pt26=document.getElementById("26");
+        const pt27=document.getElementById("27");
+        const pt28=document.getElementById("28");
+        const pt29=document.getElementById("29");
+        const pt30=document.getElementById("30");
+        const pt31=document.getElementById("31");
+        const pt32=document.getElementById("32");
+        const pt33=document.getElementById("33");
+        const pt34=document.getElementById("34");
+        const pt35=document.getElementById("35");
+        const pt36=document.getElementById("36");
+        const pt37=document.getElementById("37");
+        const pt38=document.getElementById("38");
+        const pt39=document.getElementById("39");
+        const pt40=document.getElementById("40");
+        const pt41=document.getElementById("41");
+        const pt42=document.getElementById("42");
+        const pt43=document.getElementById("43");
+        const pt44=document.getElementById("44");
+        const pt45=document.getElementById("45");
+        const pt46=document.getElementById("46");
+        const pt47=document.getElementById("47");
+        const pt48=document.getElementById("48");
+        const pt49=document.getElementById("49");
+        const pt50=document.getElementById("50");
+        const pt51=document.getElementById("51");
+        const pt52=document.getElementById("52");
+        const pt53=document.getElementById("53");
         const realSec=1/60;
         const SAVE_KEY="Collapscension/Stonelee"
         const ratlog=new Decimal(0.0791812460476);
@@ -355,7 +364,12 @@
         let energy1=new Decimal("1")
         let computingPower=new Decimal("1")
         let extraMult=new Decimal("1");
+        let starsystems=new Decimal("1");
+        let starsystemspeed=new Decimal("0");
         let robot=false
+        let prestigeFast=Infinity;
+        let dysonres=new Decimal("0");
+        let prevTime=Date.now();
         let Upgrades=
         {
             H_2:0,
@@ -376,7 +390,8 @@
             auto2:0,
             auto3:0,
             auto4:0,
-            auto5:0
+            auto5:0,
+            spdup:0
         }
         let maxLevels=
         {
@@ -398,7 +413,8 @@
             auto2:2,
             auto3:2,
             auto4:2,
-            auto5:2
+            auto5:2,
+            spdup:1
         }
         const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
         function gameStart()//It is click func:D
@@ -422,7 +438,8 @@
             {name:"11.a lot of energy",desc:"Req:Upgrade Electrical",requirement:false},
             {name:"12.is that a technological explosion?!",desc:"Req:x1 billion energy mult",requirement:false},
             {name:"13.Get ready for the robot era",desc:"Req:start to compute",requirement:false},
-            {name:"14.The robot era is coming",desc:"Req:Unlock A.I.",requirement:false}
+            {name:"14.The robot era is coming",desc:"Req:Unlock A.I.",requirement:false},
+            {name:"15.Wait a second",desc:"Req:Prestige in 1s or less",requirement:false}
         ];
         function preupdt()
         {
@@ -457,17 +474,19 @@
             }
             let robotAmount=computingPower.plus(1).log10()
             if(Upgrades.pu4)robotAmount=robotAmount.mul(PP.plus(1));
+            if(Upgrades.re4)energy1=energy1.plus(researchPoints.plus(1).log10());
+            if(Upgrades.spdup)starsystemspeed=energy1.pow(0.1).div(100)
             if(robot)
             {
                 Point=Point.plus(robotAmount).plus(1);
                 extraMult=robotAmount.mul(1/4).plus(1)
                 energy1=energy1.add(Point.pow(0.2).mul(robotAmount))
-                computingPower=computingPower.add(researchPoints.log10().pow(2).mul(energy1.pow(0.2)).mul(robotAmount))
+                computingPower=computingPower.add(researchPoints.plus(1).log10().pow(2).mul(energy1.pow(0.2)).mul(robotAmount))
             }
             resGainMult=resGainMult.mul(energy1.plus(1))
             gainH=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pH)).plus(1).mul(0.1).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pH)));
             gainCorNorO=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pCorNorO)).plus(1).mul(1.5).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pCorNorO)));
-            gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pothers)).plus(1).mul(23.8).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pothers)));
+            gainothers=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pothers)).plus(1).mul(23.6).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pothers)));
             gainsmall=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(psmallMolecule)).plus(1).mul(0.1).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(psmallMolecule)));
             gainbig=Upgrades.bPurchaseLevel.mul(0.05).mul(Scap(pbigMolecule)).plus(1).mul(0.01).mul(Upgrades.civ4.mul(0.01).plus(1).pow(Scap(pbigMolecule)));
             pt1.textContent=`You have ${Format(Point)} Points`;
@@ -505,6 +524,9 @@
             pt35.innerHTML=`Achievements|give x${Format(getAchievementMult())} for point,atom and small molecule<br>
             convert to ~x${Format(getAchievementMult().pow(3))} for single point`
             pt46.textContent=`Compute!  Computing power:x${Format(computingPower)} point`
+            pt50.textContent=`previous prestige:${formatDuration(prestigeFast)}`
+            pt52.textContent=`Dyson Sphere[${intFormat(dysonres)}/${intFormat(starsystems)}]:+x${Format(dysonres.pow(7).mul(1e20))} Boost to energy gain.Cost:1.00e90`
+            pt53.textContent=`You explored ${intFormat(starsystems)} Star System(s)`
         }
         function update()
         {
@@ -850,7 +872,7 @@
             if(Decimal.cmp(researchPoints,5e7)>=0)
             {
                 pt44.style.display="inline";
-                if(Upgrades.re3>=maxLevels.re3)
+                if(Upgrades.re4>=maxLevels.re4)
                 {
                     pt44.className="upg-completed";
                     pt44.textContent=`electric energy:x${Format(energy1.plus(1))}`
@@ -866,6 +888,12 @@
                 pt48.style.display="inline"
             }
             else pt48.className="upg-completed-p";
+            if(Decimal.cmp(Upgrades.spdup,maxLevels.spdup)<0)
+            {
+                pt51.className="upg";
+                pt51.style.display="inline"
+            }
+            else pt51.className="upg-completed";
         }
         function addAtom_h()
         {
@@ -880,8 +908,7 @@
         }
         function Format(p)
         {
-            if(p.isNaN)return "???"
-            if(!p.isFinite())return "Ω"
+            if(!p.isFinite())return "???"
             if(Decimal.cmp(p,1e6)<0)return p.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,",");
             if(Decimal.cmp(p,1e9)<0)return p.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,",");
             else if(Decimal.cmp(p,new Decimal("ee4"))<0)
@@ -917,7 +944,8 @@
             Cell=Decimal.min(Cell.mul(new Decimal(1.001).pow(timespeed)),Life.pow(1.5).plus(1));
             Tickesplayed=Tickesplayed.plus(timespeed);
             researchPoints=researchPoints.plus(Point.plus(1).log10().mul(inSec).mul(bigMolecule).mul(resGainMult))
-            energy1=energy1.plus(researchPoints.plus(1).log10())
+            starsystems=starsystems.plus(starsystemspeed.mul(inSec))
+            starsystems=Decimal.ceil(starsystems)
         }
         function buyH_2()
         {
@@ -1078,6 +1106,7 @@
             Life=new Decimal("0");
             researchPoints=new Decimal("0");
             energy1=new Decimal("0");
+            dysonres=new Decimal("0");
             computingPower=new Decimal("1");
             if(Decimal.cmp(Presitges,400)<0)
             {
@@ -1092,17 +1121,13 @@
                 re2:0,
                 re3:0,
                 re4:0,
-                autoh:Upgrades.autoh,
-                auto2:Upgrades.auto2,
-                auto3:Upgrades.auto3,
-                auto4:Upgrades.auto4,
-                auto5:Upgrades.auto5,
-                pu1:Upgrades.pu1,
-                pu2:Upgrades.pu2,
-                pu3:Upgrades.pu3,
+                spdup:0
             };
             }else GpointMult=new Decimal(6);
             update();
+            prestigeFast=Date.now()-prevTime;
+            prevTime=Date.now();
+            if(prestigeFast<=1000)gameAchievements[14].requirement=true;
             gameAchievements[0].requirement=true;
             const completed = document.getElementsByClassName("upg-completed");
             for(let i=completed.length-1;i>=0;i--)completed[i].className="upg";
@@ -1450,13 +1475,22 @@
                 }
             }, 1000);
         }
+        function buyre4()
+        {
+            if(Decimal.cmp(Point,3.33e33)>=0)
+            {
+                Point=Point.minus(3.33e33);
+                update();
+                Upgrades.re4=1;
+            }
+        }
         function moreEnergy()
         {
-            energy1=energy1.add(Point.pow(0.2))
+            energy1=energy1.add(Point.pow(0.2).plus(dysonres.pow(7).mul(1e20)))
         }
         function time2Compute()
         {
-            computingPower=computingPower.add(researchPoints.log10().pow(2).mul(energy1.pow(0.2)))
+            computingPower=computingPower.add(new Decimal(1).log10().pow(2).mul(energy1.pow(0.2)))
             gameAchievements[12].requirement=true;
         }
         function moreRobots()
@@ -1466,6 +1500,67 @@
                 PP=PP.minus(3000);
                 update();
                 Upgrades.pu4=1;
+            }
+        }
+        function speedup()
+        {
+            if(Decimal.cmp(Point,1e95)>=0)
+            {
+                Point=Point.minus(1e95);
+                update();
+                Upgrades.spdup=1;
+            }
+        }
+        function formatDuration(ms)
+        {
+            const DAY=86400000;
+            const HOUR=3600000;
+            const MINUTE=60000;
+            if(ms==Infinity)return "not yet"
+            if(ms>=DAY)
+            {
+                const days=Math.floor(ms/DAY);
+                const remainder=ms%DAY;
+                const hours=Math.floor(remainder/HOUR);
+                const minutes=Math.floor((remainder%HOUR)/MINUTE);
+                const seconds=Math.floor((remainder%MINUTE)/1000);
+                return `${days} day(s),${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            }
+            if(ms>=HOUR)
+            {
+                const hours=Math.floor(ms/HOUR);
+                const minutes=Math.floor((ms%HOUR)/MINUTE);
+                const seconds=Math.floor((ms%MINUTE)/1000);
+                return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            }
+            if (ms>=MINUTE)
+            {
+                const minutes=Math.floor(ms/MINUTE);
+                const seconds=Math.floor((ms%MINUTE) /1000);
+                return `${pad(minutes)}:${pad(seconds)}`;
+            }
+            else
+            {
+                const seconds=ms/1000;
+                return `${seconds.toFixed(2)} seconds`;
+            }
+        }
+        function pad(num)
+        {
+            return num.toString().padStart(2,'0');
+        }
+        function dyson() 
+        {
+            const empty=starsystems.minus(dysonres);
+            if(empty<=0)return;
+            const affordDecimal=Point.div(1e90);
+            const afford=affordDecimal.floor();
+            const buy=Decimal.min(afford,empty);
+            const cost=new Decimal(1e90).mul(buy);
+            if(Decimal.cmp(Point,cost)>=0)
+            {
+                Point=Point.minus(cost);
+                dysonres=dysonres.plus(buy);
             }
         }
         function Export()
@@ -1514,6 +1609,10 @@
                 energy1:energy1,
                 computingPower:computingPower,
                 robot:robot,
+                prevTime:prevTime,
+                prestigeFast:prestigeFast,
+                starsystems:starsystems.toString(),
+                dysonres:dysonres.toString(),
                 Upgrades:
                 {
                     H_2:Upgrades.H_2,
@@ -1534,7 +1633,8 @@
                     auto2:Upgrades.auto2,
                     auto3:Upgrades.auto3,
                     auto4:Upgrades.auto4,
-                    auto5:Upgrades.auto5
+                    auto5:Upgrades.auto5,
+                    spdup:Upgrades.spdup
                 },
                 achievements:gameAchievements.map(ach=>ach.requirement)
             };
@@ -1586,6 +1686,11 @@
                 energy1=new Decimal(saveData.energy1 || "0");
                 computingPower=new Decimal(saveData.computingPower || "0");
                 robot=saveData?.robot || false;
+                prevTime=saveData?.prevTime || Date.now();
+                prestigeFast=saveData?.prestigeFast || Infinity;
+                starsystems=new Decimal(saveData.starsystems || "1");
+                dysonres=new Decimal(saveData.dysonres || "1");
+                H_2=saveData.Upgrades?.H_2 || 0;
                 Upgrades.H_2=saveData.Upgrades?.H_2 || 0;
                 Upgrades.bPurchaseLevel=new Decimal(saveData.Upgrades?.bPurchaseLevel || "0");
                 Upgrades.civ1=saveData.Upgrades?.civ1 || 0;
@@ -1605,6 +1710,7 @@
                 Upgrades.auto3=saveData.Upgrades?.auto3 || 0;
                 Upgrades.auto4=saveData.Upgrades?.auto4 || 0;
                 Upgrades.auto5=saveData.Upgrades?.auto5 || 0;
+                Upgrades.spdup=saveData.Upgrades?.spdup || 0;
                 let oldOffline=saveData?.timenow || 0;
                 saveData.achievements = saveData.achievements || [];
                 console.log("Save Imported");
@@ -1631,6 +1737,7 @@
             {
                 const saveData=localStorage.getItem(SAVE_KEY);
                 if(saveData)Import(saveData);
+                else prevTime=Date.now();
                 update();
                 pt1.style.display="inline";
                 console.log("Save Loaded");
